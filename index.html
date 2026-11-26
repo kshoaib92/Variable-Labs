@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Variable Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: graph-paper lab bench. Hub = featured lab + upcoming shelf. Concept = idea -> live lab -> check yourself. */
+:root{
+  --bg:#EDF1F4; --grid:#E2E8ED; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14212C; --muted:#536577; --line:#D2DBE2;
+  --accent:#1E4FCB; --accent-ink:#FFFFFF; --accent-soft:#E2E9FA;
+  --pe:#6A43D6; --pe-soft:#EDE7FC; --ke:#D67A00; --heat:#D2392E; --elastic:#1F8C4C;
+  --good:#1F8C4C; --good-soft:#E3F4EA; --bad:#C0352B; --bad-soft:#FBE7E5;
+  --shadow:0 1px 2px rgba(20,33,44,.06), 0 8px 24px rgba(20,33,44,.06);
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D141B; --grid:#121B24; --panel:#141E28; --panel-2:#1A2632; --ink:#E3EBF2; --muted:#93A5B5; --line:#26343F;
+    --accent:#86A6FF; --accent-ink:#0D141B; --accent-soft:#1C2A47;
+    --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
+    --good:#4CC77E; --good-soft:#15301F; --bad:#FF7A6E; --bad-soft:#3A1A18;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D141B; --grid:#121B24; --panel:#141E28; --panel-2:#1A2632; --ink:#E3EBF2; --muted:#93A5B5; --line:#26343F;
+  --accent:#86A6FF; --accent-ink:#0D141B; --accent-soft:#1C2A47;
+  --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
+  --good:#4CC77E; --good-soft:#15301F; --bad:#FF7A6E; --bad-soft:#3A1A18;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0; background-color:var(--bg); color:var(--ink);
+  font:16px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 48px;
+}
+.wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+
+/* floating music control */
+.music{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;box-shadow:var(--shadow)}
+.music button{display:flex;align-items:center;gap:9px;border:0;background:var(--accent-soft);color:var(--accent);font:700 13px/1 var(--f-body);padding:8px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.music button[aria-pressed="false"]{background:var(--panel-2);color:var(--muted)}
+.eq-bars{display:flex;align-items:flex-end;gap:2px;height:13px}
+.eq-bars i{display:block;width:3px;height:13px;border-radius:2px;background:currentColor;transform-origin:50% 100%;transform:scaleY(.3);animation:eqb 1.1s ease-in-out infinite;animation-play-state:paused}
+.eq-bars i:nth-child(2){animation-delay:-.4s}.eq-bars i:nth-child(3){animation-delay:-.8s}.eq-bars i:nth-child(4){animation-delay:-.2s}
+.music.playing .eq-bars i{animation-play-state:running}
+@keyframes eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion: reduce){.eq-bars i{animation:none}}
+.music input[type=range]{width:78px;height:18px}
+@media (max-width:600px){.music input[type=range]{width:56px}}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:800 21px/1 var(--f-display);letter-spacing:-.02em}
+.brand svg{flex:none}
+.topbar nav{display:flex;gap:6px;flex-wrap:wrap}
+.topbar nav a{font-size:14px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px}
+.topbar nav a:hover{background:var(--panel);color:var(--ink)}
+
+/* ---------- HUB ---------- */
+.hero{padding-block:28px 28px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:center}
+.hero-text{display:grid;gap:18px;min-width:0}
+.hero-art{position:relative;width:100%;max-width:400px;aspect-ratio:1;justify-self:end}
+.hero-art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-cap{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4rem);font-weight:800}
+.knob{display:inline-block;padding:0 .22em;border-radius:.2em;background:var(--accent-soft);color:var(--accent);position:relative}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:60ch}
+
+.feature{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+.feature:hover{transform:translateY(-2px)}
+.feature-body{padding:32px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.feature-body h2{font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800}
+.feature-body p{color:var(--muted);max-width:52ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font:600 12px/1 var(--f-mono);padding:6px 9px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);color:var(--muted)}
+.tag.live{background:var(--good-soft);border-color:transparent;color:var(--good)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 15px/1 var(--f-body);padding:12px 18px;border-radius:12px;border:1px solid transparent;background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none;transition:transform .12s ease,filter .12s ease}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--panel);color:var(--ink);border-color:var(--line)}
+.feature .btn{align-self:flex-start;margin-top:6px}
+.feature-art{background:var(--pe-soft);display:grid;place-items:center;padding:24px;min-height:260px;border-left:1px solid var(--line)}
+.feature-art svg{width:100%;max-width:380px;height:auto}
+
+/* hero mini animation */
+.a-ball{animation:mini-fall 3.2s cubic-bezier(.55,0,1,.45) infinite}
+.a-bar-pe{transform-origin:0 50%;animation:mini-pe 3.2s cubic-bezier(.55,0,1,.45) infinite}
+.a-bar-ke{transform-origin:0 50%;animation:mini-ke 3.2s cubic-bezier(.55,0,1,.45) infinite}
+@keyframes mini-fall{0%,22%{transform:translateY(0)}70%{transform:translateY(150px)}100%{transform:translateY(150px)}}
+@keyframes mini-pe{0%,22%{transform:scaleX(1)}70%,100%{transform:scaleX(.02)}}
+@keyframes mini-ke{0%,22%{transform:scaleX(.02)}70%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@media (prefers-reduced-motion: reduce){.a-ball,.a-bar-pe,.a-bar-ke{animation:none}}
+
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:44px 0 14px;flex-wrap:wrap}
+.section-head h2{font-size:1.5rem;font-weight:700}
+.section-head p{color:var(--muted);font-size:14px}
+.soon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.soon{background:var(--panel);border:1px dashed var(--line);border-radius:16px;padding:20px;display:grid;gap:10px;align-content:start}
+.soon svg{width:64px;height:64px}
+.soon h3{font-size:1.15rem;font-weight:700}
+.soon p{color:var(--muted);font-size:14.5px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:8px}
+.step{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.step b{font:700 13px/1 var(--f-mono);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--bg)}
+.step h3{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.step p{color:var(--muted);font-size:14.5px}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- CONCEPT ---------- */
+.crumb{display:inline-flex;align-items:center;gap:6px;font-size:14px;text-decoration:none;color:var(--muted);padding:6px 10px 6px 6px;border-radius:8px;margin-top:4px}
+.crumb:hover{background:var(--panel);color:var(--ink)}
+.c-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:center;padding-block:20px 8px}
+.c-head h1{font-size:clamp(2.4rem,5.6vw,4.2rem);font-weight:800;margin:10px 0 14px}
+.c-head .lead{font-size:1.15rem;max-width:58ch}
+.c-head .lead strong{color:var(--pe)}
+.formula-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);display:grid;gap:16px}
+.formula{font:700 clamp(2rem,4.4vw,3rem)/1 var(--f-display);display:flex;align-items:center;gap:.28em;flex-wrap:wrap}
+.formula .v{padding:.06em .24em;border-radius:.18em;background:var(--panel-2);border:1px solid var(--line)}
+.formula .v.pe{background:var(--pe-soft);color:var(--pe);border-color:transparent}
+.formula .op{color:var(--muted);font-weight:500}
+.vars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.vars div{font-size:13.5px;color:var(--muted);line-height:1.35}
+.vars b{display:block;font:700 15px/1.2 var(--f-mono);color:var(--ink);margin-bottom:2px}
+.formula-card .unit{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:8px;align-content:start}
+.fact h3{font-size:1.1rem;font-weight:700}
+.fact p{color:var(--muted);font-size:15px}
+.types{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.types .label{font-size:14px;color:var(--muted);margin-right:4px}
+.type{display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:14px}
+.type i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.type small{color:var(--muted)}
+
+/* lab */
+.lab-wrap{margin-top:44px}
+.lab-title{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.lab-title h2{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:800}
+.lab-title p{color:var(--muted);max-width:56ch;font-size:15px;margin-top:6px}
+.tabs{display:inline-flex;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;gap:4px}
+.tabs button{font:700 14px/1 var(--f-body);border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:9px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.lab{display:grid;grid-template-columns:minmax(0,1fr) 310px;grid-template-areas:"stage controls" "data controls";gap:16px;align-items:start}
+.lab-stage{grid-area:stage;min-width:0;display:grid;gap:10px}
+.lab-data{grid-area:data;min-width:0;display:grid;gap:16px}
+.controls{grid-area:controls;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:18px;position:sticky;top:12px}
+.stage{position:relative;width:100%;aspect-ratio:16/10;max-width:100%;border-radius:16px;overflow:hidden;background:#5E9FE0;border:1px solid var(--line);box-shadow:var(--shadow);touch-action:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
+.stage canvas.dragging{cursor:grabbing}
+.stage-hint{position:absolute;left:12px;top:12px;font:600 12px/1.2 var(--f-mono);color:#fff;background:rgba(8,14,22,.55);padding:7px 9px;border-radius:8px;pointer-events:none;max-width:calc(100% - 24px)}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actions .btn{min-width:120px}
+.status{font-size:14px;color:var(--muted);flex:1 1 220px;min-width:0}
+.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ro{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.ro-l{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ro-v{font:600 19px/1.25 var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ro-v small{font-size:12px;color:var(--muted);font-weight:400;margin-left:3px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.panel h3{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.panel h3 span{font:400 12.5px/1.4 var(--f-body);color:var(--muted)}
+.data-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px}
+.bars{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:96px minmax(0,1fr) 74px;gap:10px;align-items:center}
+.bar-row .bl{font-size:13.5px;line-height:1.2}
+.bar-row .bl small{display:block;color:var(--muted);font-size:11.5px}
+.track{height:16px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);overflow:hidden}
+.fill{height:100%;width:0;border-radius:5px}
+.bar-row .bv{font:600 13px/1 var(--f-mono);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.total{margin-top:4px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.total b{font-family:var(--f-mono);color:var(--ink)}
+.graph-box{position:relative;width:100%;height:190px}
+.graph-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.eq{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:grid;gap:8px;font-size:15px}
+.eq .line{font-family:var(--f-mono);font-size:14.5px;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+.eq .line b{color:var(--pe)}
+.eq .line b.el{color:var(--elastic)}
+.eq .line b.ke{color:var(--ke)}
+.eq .note{color:var(--muted);font-size:14px}
+
+/* controls */
+.ctl{display:grid;gap:8px}
+.ctl-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl-h label,.ctl-h .lbl{font-weight:700;font-size:14.5px}
+.ctl-h output{font:600 14px/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--accent);background:var(--accent-soft);padding:5px 8px;border-radius:7px;white-space:nowrap}
+.ctl small.help{color:var(--muted);font-size:12.5px;line-height:1.35}
+.num{display:inline-flex;align-items:center;gap:3px;background:var(--accent-soft);border:1.5px solid transparent;border-radius:8px;padding:0 8px 0 2px;cursor:text;transition:border-color .15s}
+.num:hover{border-color:var(--line)}
+.num:focus-within{border-color:var(--accent);background:var(--panel)}
+.num input{width:62px;border:0;background:transparent;font:600 14px/1 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--accent);text-align:right;padding:6px 2px;-moz-appearance:textfield;appearance:textfield}
+.num input:focus{outline:none}
+.num input::-webkit-inner-spin-button,.num input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.num .unit{font:600 12px/1 var(--f-mono);color:var(--accent);white-space:nowrap}
+.num.flash{animation:numflash .9s ease}
+@keyframes numflash{0%,40%{border-color:var(--bad);background:var(--bad-soft)}}
+.type-tip{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:-6px}
+.type-tip svg{flex:none}
+input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cursor:pointer}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{display:grid;place-items:center;text-align:center;gap:1px;padding:7px 2px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;line-height:1.15}
+.seg label small{font:400 10.5px/1 var(--f-mono);color:var(--muted)}
+.seg input:checked + label{background:var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.12);color:var(--accent)}
+.seg input:focus-visible + label{outline:3px solid var(--accent);outline-offset:1px}
+.toggles{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:16px}
+.tog{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14.5px;cursor:pointer}
+.tog input{appearance:none;-webkit-appearance:none;width:40px;height:23px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
+.tog input::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.tog input:checked{background:var(--accent)}
+.tog input:checked::after{transform:translateX(17px)}
+.note-inline{font-size:12.5px;color:var(--muted);background:var(--panel-2);border-radius:8px;padding:8px 10px;line-height:1.4}
+
+/* challenges + quiz */
+.learn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;margin-top:44px;align-items:start}
+.learn h2{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.learn .sub{color:var(--muted);font-size:14.5px;margin-bottom:14px}
+.ch-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ch-list li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;font-size:15px;padding:10px 12px;border-radius:12px;background:var(--panel-2);transition:background .3s}
+.ch-list li .ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:var(--panel)}
+.ch-list li.done{background:var(--good-soft)}
+.ch-list li.done .ck{background:var(--good);border-color:var(--good)}
+.ch-list li.done .ck::after{content:"";width:9px;height:5px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.ch-count{font:600 13px/1 var(--f-mono);color:var(--good)}
+.q{border:0;margin:0;padding:16px 0;border-top:1px solid var(--line);display:grid;gap:10px}
+.q:first-of-type{border-top:0;padding-top:4px}
+.q legend{font-weight:700;font-size:15.5px;padding:0;margin-bottom:10px;display:flex;gap:10px}
+.q legend span{font:600 12px/1.9 var(--f-mono);color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0}
+.opt label{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:14.5px;background:var(--panel)}
+.opt label:hover{border-color:var(--accent)}
+.opt input:focus-visible + label{outline:3px solid var(--accent);outline-offset:1px}
+.opt input:checked + label{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right label{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong input:checked + label{border-color:var(--bad);background:var(--bad-soft)}
+.fb{font-size:14px;border-radius:10px;padding:10px 12px}
+.fb.right{background:var(--good-soft);color:var(--ink)}
+.fb.wrong{background:var(--bad-soft);color:var(--ink)}
+.fb b{margin-right:4px}
+.score{font:600 13px/1 var(--f-mono);color:var(--accent)}
+
+.examples{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:14px}
+.ex{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:6px;align-content:start}
+.ex h3{font-size:1.02rem;font-weight:700}
+.ex p{font-size:14.5px;color:var(--muted)}
+.ex .kind{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+
+@media (max-width: 980px){
+  .lab{grid-template-columns:minmax(0,1fr);grid-template-areas:"stage" "controls" "data"}
+  .controls{position:static}
+  .examples{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: 860px){
+  .feature{grid-template-columns:minmax(0,1fr)}
+  .feature-art{border-left:0;border-top:1px solid var(--line);min-height:220px}
+  .c-head{grid-template-columns:minmax(0,1fr)}
+  .facts,.soon-grid,.steps{grid-template-columns:minmax(0,1fr)}
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero-art{max-width:280px;justify-self:center;order:-1;margin-bottom:-12px}
+  .learn{grid-template-columns:minmax(0,1fr)}
+  .data-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 600px){
+  .stage{aspect-ratio:4/5}
+  .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .feature-body{padding:22px}
+  .examples{grid-template-columns:minmax(0,1fr)}
+  .opts{grid-template-columns:minmax(0,1fr)}
+  .vars{grid-template-columns:minmax(0,1fr)}
+  .bar-row{grid-template-columns:82px minmax(0,1fr) 66px}
+  .brand{white-space:nowrap}
+  .topbar nav a + a{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="music" id="music" hidden>
+  <button type="button" id="music-btn" aria-pressed="true"><span class="eq-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="music-label">Music</span></button>
+  <input type="range" id="music-vol" min="0" max="1" step="0.05" value="0.35" aria-label="Music volume">
+</div>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Variable Lab home">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <rect x="1" y="1" width="28" height="28" rx="8" fill="var(--ink)"/>
+        <line x1="7" y1="11" x2="23" y2="11" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="7" y1="19" x2="23" y2="19" stroke="var(--bg)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="18" cy="11" r="3.4" fill="var(--pe)"/>
+        <circle cx="11" cy="19" r="3.4" fill="var(--ke)"/>
+      </svg>
+      Variable Lab
+    </a>
+    <nav aria-label="Main">
+      <a href="#">All concepts</a>
+      <a href="#potential-energy">Potential energy</a>
+    </nav>
+  </header>
+
+  <!-- ================= HUB ================= -->
+  <main id="view-hub">
+    <section class="hero">
+      <div class="hero-text">
+        <span class="eyebrow">Interactive science, one idea at a time</span>
+        <h1>Change a <span style="white-space:nowrap"><span class="knob">number</span>.</span> Watch the science react.</h1>
+        <p>Each concept starts with a short, clear explanation. Then you get a live experiment where you move the sliders yourself and see exactly what changes, and what doesn't.</p>
+      </div>
+      <div class="hero-art"><canvas id="hero-atom" aria-hidden="true"></canvas><span class="hero-cap">Carbon atom · 6 protons, 6 neutrons</span></div>
+    </section>
+
+    <div id="featured"></div>
+
+    <div class="section-head">
+      <h2>Coming next to the lab</h2>
+      <p>New concepts are added to this series one at a time.</p>
+    </div>
+    <div class="soon-grid" id="soon"></div>
+
+    <div class="section-head">
+      <h2>How every lab works</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><b>1</b><div><h3>Read the idea</h3><p>A plain definition, the formula, and what each letter means.</p></div></div>
+      <div class="step"><b>2</b><div><h3>Change the values</h3><p>Drag, slide and switch planets. Live bars and graphs show the result as it happens.</p></div></div>
+      <div class="step"><b>3</b><div><h3>Check yourself</h3><p>Small challenges and a quick quiz show whether the idea really clicked.</p></div></div>
+    </div>
+    <footer class="foot"><span>Variable Lab</span><span>Built for students who learn by trying things.</span></footer>
+  </main>
+
+  <!-- ================= CONCEPT VIEW ================= -->
+  <main id="view-concept" hidden>
+    <a class="crumb" href="#"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>All concepts</a>
+
+    <!-- ---------- POTENTIAL ENERGY ---------- -->
+    <article data-concept="potential-energy" hidden>
+      <section class="c-head">
+        <div>
+          <span class="eyebrow">Physics · Energy</span>
+          <h1>Potential Energy</h1>
+          <p class="lead"><strong>Potential energy is stored energy.</strong> An object has it because of <em>where</em> it is or <em>how it is squashed or stretched</em>. It isn't doing anything yet, but it is ready to be released. Lift a ball and you store energy in it. Let go, and that stored energy turns into motion.</p>
+        </div>
+        <div class="formula-card" aria-label="Gravitational potential energy formula">
+          <span class="eyebrow">Gravitational potential energy</span>
+          <div class="formula"><span class="v pe">PE</span><span class="op">=</span><span class="v">m</span><span class="op">×</span><span class="v">g</span><span class="op">×</span><span class="v">h</span></div>
+          <div class="vars">
+            <div><b>m</b>mass of the object, in kilograms (kg)</div>
+            <div><b>g</b>strength of gravity, 9.81 m/s² on Earth</div>
+            <div><b>h</b>height above the ground, in metres (m)</div>
+          </div>
+          <div class="unit">The answer is in <b>joules (J)</b>. One joule is about the energy needed to lift a small apple (100 g) by one metre.</div>
+        </div>
+      </section>
+
+      <div class="facts">
+        <div class="fact"><span class="eyebrow">Idea 1</span><h3>Higher means more</h3><p>Lift something twice as high and it stores twice as much energy. Height is the "position" part of potential energy.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 2</span><h3>Heavier and stronger gravity mean more</h3><p>A bowling ball on a shelf stores more than a tennis ball on the same shelf. The same ball stores less on the Moon, where gravity is weaker.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 3</span><h3>Energy changes form, never disappears</h3><p>As an object falls, stored energy becomes motion (kinetic) energy. On landing it becomes heat, sound and a dent. The total stays the same.</p></div>
+      </div>
+      <div class="types">
+        <span class="label">Kinds of potential energy:</span>
+        <span class="type"><i style="background:var(--pe)"></i>Gravitational <small>from height</small></span>
+        <span class="type"><i style="background:var(--elastic)"></i>Elastic <small>from stretching or squashing, ½·k·x²</small></span>
+        <span class="type"><i style="background:var(--muted)"></i>Chemical <small>in food, fuel and batteries</small></span>
+      </div>
+
+      <!-- LAB -->
+      <section class="lab-wrap" id="pe-lab" aria-labelledby="pe-lab-title">
+        <div class="lab-title">
+          <div>
+            <span class="eyebrow">Interactive lab</span>
+            <h2 id="pe-lab-title">Try it yourself</h2>
+            <p id="pe-lab-sub">Set the height and mass, pick a planet, then drop the ball. Watch the purple stored-energy bar turn into orange motion energy.</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Experiment">
+            <button role="tab" id="pe-tab-drop" aria-selected="true" data-mode="drop">Drop test</button>
+            <button role="tab" id="pe-tab-spring" aria-selected="false" data-mode="spring">Spring launcher</button>
+          </div>
+        </div>
+
+        <div class="lab">
+          <div class="lab-stage">
+            <div class="stage" id="pe-stage-box">
+              <canvas id="pe-stage" tabindex="0" role="img" aria-label="Simulation of a ball being dropped from a tower. Press Space to drop, arrow keys to change height."></canvas>
+              <div class="stage-hint" id="pe-hint">Drag the ball up or down to change its height</div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="pe-act" type="button">
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+                <span id="pe-act-label">Drop</span>
+              </button>
+              <button class="btn ghost" id="pe-reset" type="button">Reset</button>
+              <p class="status" id="pe-status" aria-live="polite">Ready. The ball is sitting still, so all its energy is stored.</p>
+            </div>
+            <div class="readouts" id="pe-readouts">
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+            </div>
+          </div>
+
+          <aside class="controls" aria-label="Experiment controls">
+            <div class="ctl">
+              <div class="ctl-h"><span class="lbl" id="pe-planet-l">Planet</span><output id="pe-g-out">g = 9.81 m/s²</output></div>
+              <div class="seg" role="radiogroup" aria-labelledby="pe-planet-l">
+                <input type="radio" name="pe-planet" id="pe-pl-earth" value="earth" checked><label for="pe-pl-earth">Earth<small>9.81</small></label>
+                <input type="radio" name="pe-planet" id="pe-pl-moon" value="moon"><label for="pe-pl-moon">Moon<small>1.62</small></label>
+                <input type="radio" name="pe-planet" id="pe-pl-mars" value="mars"><label for="pe-pl-mars">Mars<small>3.71</small></label>
+                <input type="radio" name="pe-planet" id="pe-pl-jupiter" value="jupiter"><label for="pe-pl-jupiter">Jupiter<small>24.8</small></label>
+              </div>
+              <small class="help" id="pe-planet-note">Gravity pulls hardest on Jupiter and weakest on the Moon.</small>
+            </div>
+
+            <p class="type-tip"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 8h1M7 8h1M10 8h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Drag a slider, or click a number and type an exact value.</p>
+            <div id="pe-ctl-drop" class="ctl" style="gap:18px">
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-m">Mass (m)</label><output id="pe-m-out" for="pe-m">2.0 kg</output></div>
+                <input type="range" id="pe-m" min="0.2" max="20" step="0.1" value="2">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-h">Height (h)</label><output id="pe-h-out" for="pe-h">10.0 m</output></div>
+                <input type="range" id="pe-h" min="1" max="30" step="0.5" value="10">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-e">Bounciness</label><output id="pe-e-out" for="pe-e">40%</output></div>
+                <input type="range" id="pe-e" min="0" max="0.9" step="0.05" value="0.4">
+                <small class="help">How much speed the ball keeps after each bounce.</small>
+              </div>
+            </div>
+
+            <div id="pe-ctl-spring" class="ctl" style="gap:18px" hidden>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-sm">Mass (m)</label><output id="pe-sm-out" for="pe-sm">1.0 kg</output></div>
+                <input type="range" id="pe-sm" min="0.2" max="5" step="0.1" value="1">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-k">Spring stiffness (k)</label><output id="pe-k-out" for="pe-k">400 N/m</output></div>
+                <input type="range" id="pe-k" min="100" max="1500" step="50" value="400">
+                <small class="help">A stiffer spring is harder to squash.</small>
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pe-x">Squash distance (x)</label><output id="pe-x-out" for="pe-x">0.30 m</output></div>
+                <input type="range" id="pe-x" min="0.05" max="0.5" step="0.01" value="0.3">
+                <small class="help">You can also drag the ball down onto the spring.</small>
+              </div>
+            </div>
+
+            <div class="toggles">
+              <label class="tog">Air resistance <input type="checkbox" id="pe-air"></label>
+              <p class="note-inline" id="pe-air-note" hidden></p>
+              <label class="tog">Show position trail <input type="checkbox" id="pe-trail" checked></label>
+              <label class="tog">Show speed arrow <input type="checkbox" id="pe-arrow" checked></label>
+              <label class="tog">Sound effects <input type="checkbox" id="pe-sound" checked></label>
+            </div>
+            <div class="ctl">
+              <div class="ctl-h"><span class="lbl" id="pe-speed-l">Playback speed</span></div>
+              <div class="seg three" role="radiogroup" aria-labelledby="pe-speed-l">
+                <input type="radio" name="pe-speed" id="pe-sp-1" value="1" checked><label for="pe-sp-1">Normal</label>
+                <input type="radio" name="pe-speed" id="pe-sp-2" value="0.4"><label for="pe-sp-2">Slow</label>
+                <input type="radio" name="pe-speed" id="pe-sp-3" value="0.12"><label for="pe-sp-3">Super slow</label>
+              </div>
+            </div>
+          </aside>
+
+          <div class="lab-data">
+            <div class="eq" id="pe-eq" aria-live="polite"></div>
+            <div class="data-grid">
+              <div class="panel">
+                <h3>Energy right now <span>bars share one scale</span></h3>
+                <div class="bars" id="pe-bars"></div>
+                <div class="total"><span>Total energy</span><b id="pe-total">0 J</b></div>
+              </div>
+              <div class="panel">
+                <h3>Energy over time <span>joules vs seconds</span></h3>
+                <div class="graph-box"><canvas id="pe-graph" role="img" aria-label="Line graph of energy over time"></canvas></div>
+                <div class="legend" id="pe-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGES + QUIZ -->
+      <section class="learn">
+        <div class="panel">
+          <h2>Lab challenges</h2>
+          <p class="sub">Each one ticks itself off when you do it in the lab above. <span class="ch-count" id="pe-ch-count">0 / 5</span></p>
+          <ul class="ch-list" id="pe-ch"></ul>
+        </div>
+        <div class="panel">
+          <h2>Check yourself</h2>
+          <p class="sub">Pick an answer to see the explanation. <span class="score" id="pe-quiz-score"></span></p>
+          <form id="pe-quiz"></form>
+        </div>
+      </section>
+
+      <div class="section-head"><h2>Where you meet potential energy</h2></div>
+      <div class="examples">
+        <div class="ex"><span class="kind" style="color:var(--pe)">Gravitational</span><h3>Water behind a dam</h3><p>Water held high up stores energy. Let it fall through turbines and it makes electricity.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--pe)">Gravitational</span><h3>Top of a roller coaster</h3><p>The chain lifts the cars up the first hill. That height is the energy for the whole ride.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--elastic)">Elastic</span><h3>A drawn bow</h3><p>Pulling the string bends the bow. Let go, and the stored energy launches the arrow.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--muted)">Chemical</span><h3>Food and batteries</h3><p>Energy is stored in chemical bonds and released when your body digests food or a battery powers a phone.</p></div>
+      </div>
+      <footer class="foot"><span>Variable Lab · Potential Energy</span><span>Physics in the simulation uses real values of g for each planet.</span></footer>
+    </article>
+  </main>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const fmt = (v, d = 1) => Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtJ = (E) => { E = Math.max(0, E); if (E >= 10000) return fmt(E / 1000, 1) + ' kJ'; if (E >= 100) return fmt(E, 0) + ' J'; return fmt(E, 1) + ' J'; };
+const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- theme colours for canvas ---------- */
+const C = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  ['pe', 'ke', 'heat', 'elastic', 'ink', 'muted', 'line', 'panel', 'panel-2', 'accent'].forEach(k => C[k] = cs.getPropertyValue('--' + k).trim());
+}
+readColors();
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors); } catch (e) {}
+new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+/* ---------- small illustrations for the hub ---------- */
+const ART = {
+  pe: `<svg viewBox="0 0 380 260" role="img" aria-label="A ball drops from a ledge while a stored-energy bar shrinks and a motion bar grows">
+    <rect x="24" y="40" width="130" height="14" rx="3" fill="var(--ink)" opacity=".85"/>
+    <rect x="40" y="54" width="10" height="170" fill="var(--ink)" opacity=".35"/>
+    <rect x="124" y="54" width="10" height="170" fill="var(--ink)" opacity=".35"/>
+    <rect x="10" y="224" width="200" height="8" rx="2" fill="var(--ink)" opacity=".85"/>
+    <line x1="178" y1="40" x2="178" y2="214" stroke="var(--pe)" stroke-width="2" stroke-dasharray="5 5"/>
+    <g class="a-ball"><circle cx="160" cy="25" r="15" fill="var(--accent)"/><circle cx="155" cy="20" r="4" fill="#fff" opacity=".55"/></g>
+    <text x="186" y="130" font-family="JetBrains Mono, monospace" font-size="13" fill="var(--pe)">h</text>
+    <g font-family="JetBrains Mono, monospace" font-size="12" fill="var(--muted)">
+      <text x="236" y="96">stored</text><text x="236" y="156">motion</text>
+    </g>
+    <rect x="236" y="104" width="120" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="a-bar-pe" x="236" y="104" width="120" height="14" rx="4" fill="var(--pe)"/>
+    <rect x="236" y="164" width="120" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="a-bar-ke" x="236" y="164" width="120" height="14" rx="4" fill="var(--ke)"/>
+  </svg>`,
+  pendulum: `<svg viewBox="0 0 64 64" aria-hidden="true"><line x1="10" y1="8" x2="54" y2="8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><line x1="32" y1="8" x2="46" y2="46" stroke="var(--muted)" stroke-width="2"/><circle cx="46" cy="47" r="7" fill="var(--accent)"/><path d="M18 46a16 16 0 0 0 28 0" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 3"/></svg>`,
+  buoy: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="30" width="52" height="28" rx="4" fill="var(--accent-soft)"/><path d="M6 30q6.5-4 13 0t13 0 13 0 13 0" fill="none" stroke="var(--accent)" stroke-width="2"/><rect x="22" y="20" width="20" height="16" rx="3" fill="var(--ke)"/><circle cx="44" cy="52" r="4" fill="var(--muted)"/></svg>`,
+  circuit: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="14" width="44" height="36" rx="6" fill="none" stroke="var(--ink)" stroke-width="3"/><rect x="6" y="26" width="8" height="12" rx="2" fill="var(--accent)"/><path d="M26 14l3-5 4 10 4-10 3 5" fill="none" stroke="var(--heat)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="40" cy="50" r="6" fill="var(--ke)"/></svg>`
+};
+
+/* ---------- shared audio context ---------- */
+let sharedAC = null;
+function getAudio() {
+  try {
+    sharedAC = sharedAC || new (window.AudioContext || window.webkitAudioContext)();
+    if (sharedAC.state === 'suspended') sharedAC.resume().catch(() => {});
+    return sharedAC;
+  } catch (e) { return null; }
+}
+
+/* ---------- animated science background + hero atom ---------- */
+const Ambient = (() => {
+  const cv = $('#bg'), ctx = cv.getContext('2d');
+  const hc = $('#hero-atom'), hx = hc.getContext('2d');
+  let W = 0, H = 0, DP = 1, HW = 0, HH = 0, items = [], t = 0, last = 0, raf = 0;
+  let mx = 0, my = 0, tx = 0, ty = 0, onHub = true, alphaScale = 1;
+  const R = Math.random, TAU = Math.PI * 2;
+  const FORMULAS = ['PE = mgh', 'E = mc²', 'F = ma', '½kx²', 'v = √2gh', 'KE = ½mv²', 'λ', 'Δt', 'g = 9.81', 'p = mv', 'W = Fd', 'H₂O', 'ΣE = const', 'V = IR'];
+  const KINDS = ['atom', 'atom', 'molecule', 'molecule', 'helix', 'wave', 'orbit', 'pendulum', 'formula', 'formula', 'formula', 'hex'];
+  const COLS = ['accent', 'pe', 'ke', 'elastic', 'muted'];
+  const pick = a => a[Math.floor(R() * a.length)];
+
+  // nucleus for the hero atom: 12 nucleons packed in a little ball
+  const nucleons = Array.from({ length: 12 }, (_, i) => {
+    const k = i + 0.5, phi = Math.acos(1 - 2 * k / 12), th = Math.PI * (1 + Math.sqrt(5)) * k;
+    const rr = i < 2 ? 0.25 : 1;
+    return { x: Math.cos(th) * Math.sin(phi) * rr, y: Math.sin(th) * Math.sin(phi) * rr, z: Math.cos(phi) * rr, p: i % 2 === 0, j: R() * TAU };
+  });
+
+  function resize() {
+    DP = Math.min(1.5, window.devicePixelRatio || 1);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * DP); cv.height = Math.round(H * DP);
+    const r = hc.getBoundingClientRect(); HW = r.width; HH = r.height;
+    hc.width = Math.max(1, Math.round(HW * DP)); hc.height = Math.max(1, Math.round(HH * DP));
+    build();
+    if (reduceMotion) drawOnce();
+  }
+  function build() {
+    const n = clamp(Math.round(W * H / 55000), 9, 26);
+    const cols = Math.max(2, Math.round(Math.sqrt(n * W / H))), rows = Math.ceil(n / cols);
+    items = [];
+    for (let i = 0; i < n; i++) {
+      const c = i % cols, r = Math.floor(i / cols);
+      items.push({
+        kind: pick(KINDS), x: (c + 0.15 + R() * 0.7) / cols * W, y: (r + 0.15 + R() * 0.7) / rows * H,
+        s: 22 + R() * 30, rot: R() * TAU, spin: (R() - 0.5) * 0.3, vy: -(4 + R() * 7), vx: (R() - 0.5) * 3,
+        ph: R() * TAU, depth: 0.4 + R() * 0.6, col: pick(COLS), text: pick(FORMULAS), variant: R() < 0.5 ? 0 : 1
+      });
+    }
+  }
+
+  const DRAW = {
+    atom(it, s) {
+      ctx.rotate(it.rot);
+      for (let i = 0; i < 3; i++) {
+        ctx.save(); ctx.rotate(i * Math.PI / 3);
+        ctx.beginPath(); ctx.ellipse(0, 0, s, s * 0.34, 0, 0, TAU); ctx.stroke();
+        const a = t * (1.1 + i * 0.3) + it.ph + i * 2;
+        ctx.beginPath(); ctx.arc(Math.cos(a) * s, Math.sin(a) * s * 0.34, 2.8, 0, TAU); ctx.fill();
+        ctx.restore();
+      }
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.14, 0, TAU); ctx.fill();
+    },
+    molecule(it, s) {
+      const pts = it.variant
+        ? [[0, 0, 0, 0.22], [0.58, 0.45, 0, 0.13], [-0.58, 0.45, 0, 0.13]]                              // water
+        : [[0, 0, 0, 0.2], [0.55, 0.55, 0.55, 0.12], [0.55, -0.55, -0.55, 0.12], [-0.55, 0.55, -0.55, 0.12], [-0.55, -0.55, 0.55, 0.12]]; // methane
+      const A = t * 0.5 + it.ph, B = 0.6 + Math.sin(t * 0.2 + it.ph) * 0.3;
+      const P = pts.map(([x, y, z, r]) => {
+        const x1 = x * Math.cos(A) + z * Math.sin(A), z1 = -x * Math.sin(A) + z * Math.cos(A);
+        const y2 = y * Math.cos(B) - z1 * Math.sin(B), z2 = y * Math.sin(B) + z1 * Math.cos(B);
+        return { x: x1 * s, y: y2 * s, z: z2, r: r * s * (1 + z2 * 0.25) };
+      });
+      ctx.beginPath(); P.slice(1).forEach(p => { ctx.moveTo(P[0].x, P[0].y); ctx.lineTo(p.x, p.y); }); ctx.stroke();
+      P.slice().sort((a, b) => a.z - b.z).forEach((p, i) => { ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(1.5, p.r), 0, TAU); p === P[0] ? ctx.fill() : ctx.stroke(); });
+    },
+    helix(it, s) {
+      ctx.rotate(0.5 + Math.sin(it.rot) * 0.4);
+      const N = 16, base = ctx.globalAlpha;
+      for (let i = 0; i < N; i++) {
+        const y = -s * 1.3 + i * (2.6 * s / (N - 1)), p = i * 0.55 + t * 1.1 + it.ph;
+        const x1 = Math.cos(p) * s * 0.4, z = Math.sin(p);
+        if (i % 2 === 0) { ctx.globalAlpha = base * 0.6; ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(-x1, y); ctx.stroke(); }
+        ctx.globalAlpha = base * (0.55 + 0.45 * z); ctx.beginPath(); ctx.arc(x1, y, 2.6, 0, TAU); ctx.fill();
+        ctx.globalAlpha = base * (0.55 - 0.45 * z); ctx.beginPath(); ctx.arc(-x1, y, 2.6, 0, TAU); ctx.fill();
+      }
+      ctx.globalAlpha = base;
+    },
+    wave(it, s) {
+      ctx.rotate(Math.sin(it.rot) * 0.3);
+      for (let k = 0; k < 2; k++) {
+        ctx.beginPath();
+        for (let x = -s * 1.6; x <= s * 1.6; x += 3) {
+          const y = Math.sin(x / s * 3 + t * 2 + it.ph + k * 1.4) * s * (0.22 - k * 0.08);
+          x === -s * 1.6 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+    },
+    orbit(it, s) {
+      ctx.rotate(Math.sin(it.rot) * 0.4);
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.17, 0, TAU); ctx.fill();
+      ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.ellipse(0, 0, s, s * 0.45, 0, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+      const a = t * 0.6 + it.ph, px = Math.cos(a) * s, py = Math.sin(a) * s * 0.45;
+      ctx.beginPath(); ctx.arc(px, py, 4.5, 0, TAU); ctx.fill();
+      const b = t * 2.6 + it.ph;
+      ctx.beginPath(); ctx.arc(px + Math.cos(b) * 10, py + Math.sin(b) * 5, 1.8, 0, TAU); ctx.fill();
+    },
+    pendulum(it, s) {
+      const L = s * 1.5, ang = 0.6 * Math.sin(t * 1.7 + it.ph);
+      ctx.beginPath(); ctx.moveTo(-s * 0.5, -s); ctx.lineTo(s * 0.5, -s); ctx.stroke();
+      ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.arc(0, -s, L, Math.PI / 2 - 0.6, Math.PI / 2 + 0.6); ctx.stroke(); ctx.setLineDash([]);
+      const bx = Math.sin(ang) * L, by = -s + Math.cos(ang) * L;
+      ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx, by, s * 0.17, 0, TAU); ctx.fill();
+    },
+    formula(it, s) {
+      ctx.rotate(Math.sin(t * 0.3 + it.ph) * 0.12);
+      ctx.font = `500 ${Math.round(s * 0.55)}px "JetBrains Mono", ui-monospace, monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(it.text, 0, 0);
+    },
+    hex(it, s) {
+      ctx.rotate(it.rot + t * 0.15);
+      const r = s * 0.62;
+      ctx.beginPath(); for (let i = 0; i <= 6; i++) { const a = i * Math.PI / 3; i ? ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r) : ctx.moveTo(r, 0); } ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, r * 0.55, 0, TAU); ctx.stroke();
+      for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; ctx.beginPath(); ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 2.4, 0, TAU); ctx.fill(); }
+    }
+  };
+
+  function drawBg(dt) {
+    ctx.setTransform(DP, 0, 0, DP, 0, 0); ctx.clearRect(0, 0, W, H);
+    const sy = window.scrollY || 0;
+    ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+    items.forEach(it => {
+      it.y += it.vy * dt * it.depth; it.x += it.vx * dt; it.rot += it.spin * dt;
+      if (it.x < -90) it.x = W + 90; else if (it.x > W + 90) it.x = -90;
+      const span = H + it.s * 6;
+      let y = it.y - sy * 0.12 * it.depth + ty * 18 * it.depth;
+      y = ((y + it.s * 3) % span + span) % span - it.s * 3;
+      const x = it.x + tx * 28 * it.depth;
+      const col = C[it.col] || C.muted;
+      ctx.save(); ctx.translate(x, y);
+      ctx.globalAlpha = (0.12 + 0.16 * it.depth) * alphaScale;
+      ctx.strokeStyle = col; ctx.fillStyle = col;
+      DRAW[it.kind](it, it.s);
+      ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function drawHero() {
+    if (!HW || !onHub) return;
+    const c = hx; c.setTransform(DP, 0, 0, DP, 0, 0); c.clearRect(0, 0, HW, HH);
+    const cx = HW / 2 + tx * 10, cy = HH / 2 - 8 + ty * 8, Rr = Math.min(HW, HH) * 0.4;
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, Rr * 0.75);
+    g.addColorStop(0, C.accent); g.addColorStop(1, 'transparent');
+    c.globalAlpha = 0.16; c.fillStyle = g; c.beginPath(); c.arc(cx, cy, Rr * 0.75, 0, TAU); c.fill(); c.globalAlpha = 1;
+    const ecol = [C.accent, C.pe, C.ke];
+    const orbit = (i, front) => {
+      const rot = t * 0.07 + i * Math.PI / 3 + tx * 0.25, ry = 0.3 + ty * 0.08;
+      c.save(); c.translate(cx, cy); c.rotate(rot);
+      if (!front) { c.strokeStyle = C.muted; c.globalAlpha = 0.45; c.lineWidth = 1.5; c.beginPath(); c.ellipse(0, 0, Rr, Rr * ry, 0, 0, TAU); c.stroke(); }
+      for (let e = 0; e < 2; e++) {
+        const a = t * (0.85 + i * 0.22) + i * 2.1 + e * Math.PI;
+        if ((Math.sin(a) > 0) !== front) continue;             // electrons in front of the nucleus draw last
+        for (let k = 16; k >= 0; k--) {
+          const ak = a - k * 0.045;
+          c.globalAlpha = k === 0 ? 1 : 0.55 * (1 - k / 17);
+          c.fillStyle = ecol[i];
+          if (k === 0) { c.shadowColor = ecol[i]; c.shadowBlur = 14; }
+          c.beginPath(); c.arc(Math.cos(ak) * Rr, Math.sin(ak) * Rr * ry, k === 0 ? 5.5 : 4 * (1 - k / 20), 0, TAU); c.fill();
+          c.shadowBlur = 0;
+        }
+      }
+      c.restore(); c.globalAlpha = 1;
+    };
+    for (let i = 0; i < 3; i++) orbit(i, false);
+    // nucleus
+    const A = t * 0.5, nr = Rr * 0.15, br = Rr * 0.07;
+    nucleons.map(n => {
+      const j = Math.sin(t * 3 + n.j) * 0.04;
+      const x = n.x * Math.cos(A) + n.z * Math.sin(A), z = -n.x * Math.sin(A) + n.z * Math.cos(A);
+      return { x: cx + x * nr * (1 + j), y: cy + n.y * nr * (1 + j), z, p: n.p };
+    }).sort((a, b) => a.z - b.z).forEach(n => {
+      const col = n.p ? C.heat : C.muted, r = br * (1 + n.z * 0.12);
+      c.fillStyle = col; c.beginPath(); c.arc(n.x, n.y, r, 0, TAU); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(n.x - r * 0.3, n.y - r * 0.35, r * 0.35, 0, TAU); c.fill();
+    });
+    for (let i = 0; i < 3; i++) orbit(i, true);
+  }
+
+  function frame(ts) {
+    raf = requestAnimationFrame(frame);
+    const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0; last = ts; t += dt;
+    tx += (mx - tx) * Math.min(1, dt * 2); ty += (my - ty) * Math.min(1, dt * 2);
+    drawBg(dt); drawHero();
+  }
+  function drawOnce() { t = 3; drawBg(0); drawHero(); }
+  function play() { if (reduceMotion || raf) return; last = 0; raf = requestAnimationFrame(frame); }
+  function pause() { cancelAnimationFrame(raf); raf = 0; }
+
+  window.addEventListener('resize', resize);
+  new ResizeObserver(() => { const r = hc.getBoundingClientRect(); if (Math.abs(r.width - HW) > 1) resize(); }).observe(hc);
+  window.addEventListener('pointermove', e => { mx = e.clientX / Math.max(1, W) - 0.5; my = e.clientY / Math.max(1, H) - 0.5; }, { passive: true });
+  document.addEventListener('visibilitychange', () => document.hidden ? pause() : play());
+  window.addEventListener('scroll', () => { if (reduceMotion) drawOnce(); }, { passive: true });
+  resize(); play();
+  return {
+    setHub(h) { onHub = h; alphaScale = h ? 1 : 0.65; if (h) requestAnimationFrame(resize); if (reduceMotion) drawOnce(); },
+    redraw() { if (reduceMotion) drawOnce(); }
+  };
+})();
+
+/* ---------- soft generative music for the lab pages ---------- */
+const Music = (() => {
+  const box = $('#music'), btn = $('#music-btn'), lab = $('#music-label'), volEl = $('#music-vol');
+  let want = store.get('vl-music', true), vol = store.get('vl-music-vol', 0.35);
+  let inLab = false, playing = false, ac = null, master = null, bus = null, timer = 0, nextChord = 0, nextBell = 0, idx = 0;
+  volEl.value = vol;
+  // Cmaj7 → Am7 → Fmaj7 → G6sus: calm, unresolved, loops forever
+  const CHORDS = [[48, 55, 59, 64], [45, 52, 55, 60], [41, 48, 52, 57], [43, 50, 55, 62]];
+  const BELLS = [72, 74, 76, 79, 81, 84, 86];
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  const level = () => vol * 0.32;
+
+  function ensure() {
+    ac = getAudio(); if (!ac) return false;
+    if (master) return true;
+    master = ac.createGain(); master.gain.value = 0;
+    bus = ac.createBiquadFilter(); bus.type = 'lowpass'; bus.frequency.value = 1300; bus.Q.value = 0.3;
+    const delay = ac.createDelay(2), fb = ac.createGain(), dl = ac.createBiquadFilter(), wet = ac.createGain();
+    delay.delayTime.value = 0.46; fb.gain.value = 0.42; dl.type = 'lowpass'; dl.frequency.value = 1600; wet.gain.value = 0.5;
+    bus.connect(master); bus.connect(delay); delay.connect(dl); dl.connect(fb); fb.connect(delay); dl.connect(wet); wet.connect(master);
+    master.connect(ac.destination);
+    return true;
+  }
+  function pad(notes, t0, dur) {
+    notes.forEach((m, n) => {
+      [-5, 5].forEach(det => {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = n === 0 ? 'triangle' : 'sine'; o.frequency.value = hz(m); o.detune.value = det;
+        const pk = n === 0 ? 0.05 : 0.035;
+        g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(pk, t0 + 2.8);
+        g.gain.setValueAtTime(pk, t0 + dur - 0.4); g.gain.linearRampToValueAtTime(0, t0 + dur + 2.6);
+        o.connect(g); g.connect(bus); o.start(t0); o.stop(t0 + dur + 2.7);
+      });
+    });
+  }
+  function bell(m, t0) {
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = hz(m); o2.type = 'sine'; o2.frequency.value = hz(m) * 2.01;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(0.03, t0 + 0.015); g.gain.exponentialRampToValueAtTime(0.0004, t0 + 3);
+    const g2 = ac.createGain(); g2.gain.value = 0.25;
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(bus);
+    o.start(t0); o2.start(t0); o.stop(t0 + 3.1); o2.stop(t0 + 3.1);
+  }
+  function schedule() {
+    const now = ac.currentTime;
+    while (nextChord < now + 1.5) { pad(CHORDS[idx % 4], nextChord, 8); idx++; nextChord += 8; }
+    while (nextBell < now + 1.5) {
+      if (Math.random() < 0.8) bell(BELLS[Math.floor(Math.random() * BELLS.length)], nextBell);
+      nextBell += 1.4 + Math.random() * 2.6;
+    }
+  }
+  function start() {
+    if (!want || !inLab || playing || document.hidden) return render();
+    if (!ensure()) return render();
+    if (ac.state !== 'running') { ac.resume().then(() => { if (ac.state === 'running') start(); }).catch(() => {}); return render(); }
+    playing = true;
+    const now = ac.currentTime;
+    master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(master.gain.value, now); master.gain.linearRampToValueAtTime(level(), now + 3);
+    nextChord = now + 0.1; nextBell = now + 2.5;
+    schedule(); timer = setInterval(schedule, 400);
+    render();
+  }
+  function stop() {
+    if (!playing) return render();
+    playing = false; clearInterval(timer);
+    const now = ac.currentTime;
+    master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(master.gain.value, now); master.gain.linearRampToValueAtTime(0, now + 1.2);
+    render();
+  }
+  function render() {
+    box.classList.toggle('playing', playing);
+    btn.setAttribute('aria-pressed', String(want));
+    lab.textContent = !want ? 'Music off' : playing ? 'Music on' : 'Tap anywhere for music';
+  }
+  btn.addEventListener('click', () => { want = !want; store.set('vl-music', want); want ? start() : stop(); });
+  volEl.addEventListener('input', () => {
+    vol = parseFloat(volEl.value); store.set('vl-music-vol', vol);
+    if (playing) master.gain.setTargetAtTime(level(), ac.currentTime, 0.2);
+  });
+  const gesture = e => { if (box.contains(e.target)) return; if (inLab && want && !playing) start(); };
+  document.addEventListener('pointerdown', gesture, true);
+  document.addEventListener('keydown', gesture, true);
+  document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start(); });
+  return {
+    enter() { inLab = true; box.hidden = false; start(); },
+    leave() { inLab = false; box.hidden = true; stop(); }
+  };
+})();
+
+/* ---------- concept registry: add new concepts here ---------- */
+const CONCEPTS = [
+  { id: 'potential-energy', title: 'Potential Energy', ready: true, art: 'pe',
+    tags: ['Physics', 'Energy', 'Ages 11–16', '2 experiments'],
+    blurb: 'Lift a ball, drop it, squash a spring. Change mass, height and gravity, and watch stored energy turn into motion, heat and sound.',
+    factory: () => createPE() },
+  { id: 'pendulum', title: 'Pendulums', ready: false, art: 'pendulum', blurb: 'Does a longer string swing slower? Does a heavier bob change anything?' },
+  { id: 'buoyancy', title: 'Buoyancy & Density', ready: false, art: 'buoy', blurb: 'Why a steel ship floats but a steel nail sinks.' },
+  { id: 'ohms-law', title: "Ohm's Law", ready: false, art: 'circuit', blurb: 'Turn up the voltage, add resistance, and watch the current change.' }
+];
+
+function renderHub() {
+  const live = CONCEPTS.filter(c => c.ready);
+  $('#featured').innerHTML = live.map(c => `
+    <a class="feature" href="#${c.id}">
+      <div class="feature-body">
+        <div class="tags"><span class="tag live">Live lab</span>${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <h2>${c.title}</h2>
+        <p>${c.blurb}</p>
+        <span class="btn">Open the lab <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="feature-art">${ART[c.art]}</div>
+    </a>`).join('<div style="height:16px"></div>');
+  $('#soon').innerHTML = CONCEPTS.filter(c => !c.ready).map(c => `
+    <div class="soon">${ART[c.art]}<h3>${c.title}</h3><p>${c.blurb}</p><div><span class="tag">Coming soon</span></div></div>`).join('');
+}
+
+/* ---------- router (hash) ---------- */
+const instances = {};
+function route() {
+  const id = location.hash.replace('#', '');
+  const c = CONCEPTS.find(x => x.id === id && x.ready);
+  $('#view-hub').hidden = !!c;
+  $('#view-concept').hidden = !c;
+  $$('[data-concept]').forEach(el => el.hidden = !c || el.dataset.concept !== c.id);
+  Object.keys(instances).forEach(k => { if (!c || k !== c.id) instances[k].stop(); });
+  if (c) {
+    if (!instances[c.id]) instances[c.id] = c.factory();
+    instances[c.id].start();
+    Music.enter();
+  } else Music.leave();
+  Ambient.setHub(!c);
+  window.scrollTo(0, 0);
+}
+renderHub();
+window.addEventListener('hashchange', route);
+route();
+
+/* =====================================================================
+   POTENTIAL ENERGY LAB
+   ===================================================================== */
+function createPE() {
+  const root = $('[data-concept="potential-energy"]');
+  const cv = $('#pe-stage'), ctx = cv.getContext('2d');
+  const gcv = $('#pe-graph'), gctx = gcv.getContext('2d');
+  let W = 0, H = 0, DPR = 1, GW = 0, GH = 0;
+  let raf = 0, last = 0, acc = 0, tVis = 0, running = false;
+  const STEP = 1 / 1000;
+
+  const PLANETS = {
+    earth:   { id: 'earth', name: 'Earth', g: 9.81, rho: 1.225, sky: ['#4F92DA', '#BFE1F6'], ground: '#5C8E3A', lip: '#3E6826', dust: '#A08F67', far: '#8FB9A2', near: '#6E9F52',
+               note: 'Earth: g = 9.81 m/s². Each second of falling adds about 9.8 m/s of speed.' },
+    moon:    { id: 'moon', name: 'Moon', g: 1.62, rho: 0, sky: ['#03050B', '#171B28'], ground: '#8D8F96', lip: '#64666D', dust: '#CFD0D4', far: '#3A3E48', near: '#565A64',
+               note: 'Moon: g = 1.62 m/s², about one sixth of Earth. Same height and mass, much less stored energy.' },
+    mars:    { id: 'mars', name: 'Mars', g: 3.71, rho: 0.020, sky: ['#C78A66', '#F0CBA8'], ground: '#AE522D', lip: '#80381B', dust: '#D99A6C', far: '#C98161', near: '#A04C2B',
+               note: 'Mars: g = 3.71 m/s², a bit more than a third of Earth. Its air is very thin.' },
+    jupiter: { id: 'jupiter', name: 'Jupiter', g: 24.79, rho: 0.16, sky: ['#B1845E', '#EAD3B4'], ground: '#5E6771', lip: '#3D444C', dust: '#CDBCA5', far: '#000', near: '#000',
+               note: 'Jupiter: g = 24.8 m/s², 2.5 times Earth. Jupiter has no solid ground, so here the ball lands on an imaginary floating platform.' }
+  };
+
+  const S = { mode: 'drop', planet: 'earth', air: false, trail: true, arrow: true, sound: true, speed: 1, shake: 0, view: 12, dragging: false, particles: [] };
+  const D = { m: 2, h: 10, e: 0.4, y: 10, v: 0, phase: 'ready', E0: 0, t: 0, trail: [], trailT: 0, samples: [], sampT: 0, impacts: 0, vImpact: 0, crater: 0, trap: 0 };
+  const SP = { m: 1, k: 400, x: 0.3, y: -0.3, v: 0, phase: 'ready', E0: 0, t: 0, samples: [], sampT: 0, maxY: 0, peaks: 0 };
+  const P = () => PLANETS[S.planet];
+  const dragK = () => S.air ? 0.5 * P().rho * 0.5 * 0.15 : 0;
+
+  /* ----- static scenery randomness (seeded so it is stable) ----- */
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const stars = Array.from({ length: 140 }, () => [rnd(), rnd() * 0.85, 0.4 + rnd() * 1.3, rnd() * 6.28]);
+  const speck = Array.from({ length: 90 }, () => [rnd(), rnd(), 0.6 + rnd() * 1.8]);
+  const clouds = Array.from({ length: 5 }, () => [rnd(), 0.08 + rnd() * 0.3, 0.6 + rnd() * 0.8, 4 + rnd() * 8]);
+
+  /* ----- sizing ----- */
+  function fit() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.max(1, Math.round(W * DPR)); cv.height = Math.max(1, Math.round(H * DPR));
+    const g = gcv.getBoundingClientRect(); GW = g.width; GH = g.height;
+    gcv.width = Math.max(1, Math.round(GW * DPR)); gcv.height = Math.max(1, Math.round(GH * DPR));
+  }
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe($('#pe-stage-box'));
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe(gcv.parentElement);
+
+  /* ----- sound ----- */
+  let actx = null;
+  function audio() {
+    if (!S.sound) return null;
+    actx = getAudio(); return actx;
+  }
+  function thump(E) {
+    const a = audio(); if (!a) return;
+    const t = a.currentTime, o = a.createOscillator(), gn = a.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.28);
+    const vol = clamp(0.05 + Math.log10(1 + E) / 9, 0.04, 0.45);
+    gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(0.0008, t + 0.32);
+    o.connect(gn).connect(a.destination); o.start(t); o.stop(t + 0.34);
+  }
+  function boing() {
+    const a = audio(); if (!a) return;
+    const t = a.currentTime, o = a.createOscillator(), gn = a.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(180, t); o.frequency.exponentialRampToValueAtTime(620, t + 0.18);
+    gn.gain.setValueAtTime(0.12, t); gn.gain.exponentialRampToValueAtTime(0.0008, t + 0.4);
+    o.connect(gn).connect(a.destination); o.start(t); o.stop(t + 0.42);
+  }
+  function click() {
+    const a = audio(); if (!a) return;
+    const t = a.currentTime, o = a.createOscillator(), gn = a.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(900, t);
+    gn.gain.setValueAtTime(0.03, t); gn.gain.exponentialRampToValueAtTime(0.0005, t + 0.05);
+    o.connect(gn).connect(a.destination); o.start(t); o.stop(t + 0.06);
+  }
+
+  /* ----- status ----- */
+  const statusEl = $('#pe-status');
+  const status = (s) => { statusEl.textContent = s; };
+
+  /* ----- energies ----- */
+  function energies() {
+    const g = P().g;
+    if (S.mode === 'drop') {
+      const pe = D.m * g * D.y, ke = 0.5 * D.m * D.v * D.v;
+      const E0 = D.phase === 'ready' ? pe : D.E0;
+      return { pe, ke, heat: Math.max(0, E0 - pe - ke), E0 };
+    }
+    const el = 0.5 * SP.k * Math.pow(Math.min(SP.y, 0), 2);
+    const pe = Math.max(0, SP.m * g * (SP.y + SP.x));
+    const ke = 0.5 * SP.m * SP.v * SP.v;
+    const E0 = SP.phase === 'ready' ? el : SP.E0;
+    return { el, pe, ke, heat: Math.max(0, E0 - el - pe - ke), E0 };
+  }
+  function pushSample(arr, t) {
+    const e = energies(); arr.push({ t, pe: e.pe, ke: e.ke, heat: e.heat, el: e.el || 0 });
+    if (arr.length > 1600) arr.shift();
+  }
+
+  /* ----- challenges ----- */
+  const CH = [
+    { id: 'high', text: 'Drop the ball from 20 m or higher.' },
+    { id: 'lowg', text: 'Do a drop on the Moon or Mars. Does the ball land slower than on Earth?' },
+    { id: 'mass2', text: 'Drop twice from the same height and planet, doubling the mass the second time. What happened to the stored energy?' },
+    { id: 'air', text: 'Turn on air resistance and drop a light ball (under 1 kg) on Earth. Watch the heat bar grow while it falls.' },
+    { id: 'spring', text: 'In the spring launcher, send the ball more than 3 m above the spring.' }
+  ];
+  const chDone = new Set(store.get('vl-pe-challenges', []));
+  const drops = [];
+  function renderCh() {
+    $('#pe-ch').innerHTML = CH.map(c => `<li class="${chDone.has(c.id) ? 'done' : ''}"><span class="ck" aria-hidden="true"></span><span>${c.text}<span class="sr" style="position:absolute;left:-9999px">${chDone.has(c.id) ? ' (done)' : ''}</span></span></li>`).join('');
+    $('#pe-ch-count').textContent = `${chDone.size} / ${CH.length} done`;
+  }
+  function complete(id) {
+    if (chDone.has(id)) return;
+    chDone.add(id); store.set('vl-pe-challenges', [...chDone]); renderCh();
+    const c = CH.find(x => x.id === id);
+    setTimeout(() => status('Challenge complete: ' + c.text.split('.')[0] + '.'), 900);
+  }
+  renderCh();
+
+  /* ----- DROP mode ----- */
+  function dropReset() {
+    D.y = D.h; D.v = 0; D.phase = 'ready'; D.t = 0; D.trail = []; D.trailT = 0; D.samples = []; D.sampT = 0;
+    D.impacts = 0; D.vImpact = 0; D.crater = 0; D.trap = 0; S.particles = [];
+  }
+  function dropStart() {
+    dropReset();
+    D.E0 = D.m * P().g * D.h; D.phase = 'falling';
+    pushSample(D.samples, 0);
+    click();
+    status(`Dropped from ${fmt(D.h)} m on ${P().name}. Stored energy at the start: ${fmtJ(D.E0)}.`);
+    const rec = { m: D.m, h: D.h, planet: S.planet, air: S.air, E: D.E0 };
+    if (D.h >= 20) complete('high');
+    if (S.planet === 'moon' || S.planet === 'mars') complete('lowg');
+    if (drops.some(r => Math.abs(r.h - rec.h) < 0.01 && r.planet === rec.planet && Math.abs(rec.m / r.m - 2) < 0.06)) complete('mass2');
+    drops.push(rec);
+  }
+  function dropImpact(vi) {
+    D.impacts++;
+    const E = 0.5 * D.m * vi * vi;
+    if (D.impacts === 1) {
+      D.vImpact = vi;
+      D.crater = clamp(10 + Math.log10(1 + E) * 13, 10, 78);
+      status(`Impact at ${fmt(vi)} m/s after ${fmt(D.t, 2)} s. ${fmtJ(E)} of motion energy hits the ground.`);
+    }
+    const n = Math.round(clamp(3 + Math.sqrt(E) * 1.1, 3, 70) * (reduceMotion ? 0.4 : 1));
+    const pw = clamp(Math.sqrt(E) * 6, 30, 420);
+    for (let i = 0; i < n; i++) {
+      const ang = Math.PI + rnd() * Math.PI;
+      S.particles.push({ x: 0, y: 0, vx: Math.cos(ang) * pw * (0.3 + rnd()), vy: Math.sin(ang) * pw * (0.4 + rnd() * 0.9), life: 0.6 + rnd() * 0.7, age: 0, r: 1.5 + rnd() * 2.8 });
+    }
+    if (!reduceMotion) S.shake = Math.max(S.shake, clamp(Math.sqrt(E) / 6, 0, 12));
+    thump(E);
+  }
+  function dropDone() {
+    const e = energies();
+    status(`At rest. All ${fmtJ(D.E0)} of stored energy became motion, then heat, sound and a dent in the ground. First impact: ${fmt(D.vImpact)} m/s.`);
+    if (S.air && P().rho > 0 && D.m < 1 && e.heat / D.E0 > 0.05 && S.planet === 'earth') complete('air');
+  }
+  function stepDrop(dt) {
+    if (D.phase !== 'falling') return;
+    const kd = dragK();
+    const a = -P().g - Math.sign(D.v) * kd * D.v * D.v / D.m;
+    D.v += a * dt; D.y += D.v * dt; D.t += dt;
+    if (D.impacts === 0) { D.trailT += dt; if (D.trailT >= 0.1) { D.trailT -= 0.1; D.trail.push(D.y); } }
+    if (D.y <= 0) {
+      D.y = 0;
+      if (D.v < 0) {
+        const vi = -D.v; dropImpact(vi);
+        D.v = vi * D.e;
+        if (D.v < 0.45) { D.v = 0; D.phase = 'done'; pushSample(D.samples, D.t); dropDone(); return; }
+      }
+    }
+    D.sampT += dt; if (D.sampT >= 1 / 40) { D.sampT = 0; pushSample(D.samples, D.t); }
+  }
+
+  /* ----- SPRING mode ----- */
+  const springRise = () => 0.5 * SP.k * SP.x * SP.x / (SP.m * P().g);
+  function springReset() { SP.y = -SP.x; SP.v = 0; SP.phase = 'ready'; SP.t = 0; SP.samples = []; SP.sampT = 0; SP.maxY = 0; SP.peaks = 0; }
+  function springStart() {
+    springReset();
+    SP.E0 = 0.5 * SP.k * SP.x * SP.x; SP.phase = 'running';
+    pushSample(SP.samples, 0); boing();
+    if (springRise() - SP.x <= 0) status(`Released. ${fmtJ(SP.E0)} is not enough to lift a ${fmt(SP.m)} kg ball off the spring here. Try a stiffer spring or more squash.`);
+    else status(`Released! ${fmtJ(SP.E0)} of elastic energy pushes the ball up.`);
+  }
+  function stepSpring(dt) {
+    if (SP.phase !== 'running') return;
+    const kd = dragK();
+    let F = -SP.m * P().g;
+    if (SP.y < 0) F += SP.k * (-SP.y);
+    F -= Math.sign(SP.v) * kd * SP.v * SP.v;
+    const vPrev = SP.v;
+    SP.v += F / SP.m * dt; SP.y += SP.v * dt; SP.t += dt;
+    if (SP.y < -0.6) { SP.y = -0.6; if (SP.v < 0) SP.v = 0; }
+    if (vPrev > 0 && SP.v <= 0 && SP.y > 0.005) {
+      SP.peaks++; SP.maxY = Math.max(SP.maxY, SP.y);
+      if (SP.peaks === 1) status(`Top of the flight: ${fmt(SP.y, 2)} m above the spring. Here the ball is still for a moment, so its motion energy is zero.`);
+      if (SP.y > 3) complete('spring');
+    }
+    SP.sampT += dt; if (SP.sampT >= 1 / 40) { SP.sampT = 0; pushSample(SP.samples, SP.t); }
+  }
+
+  /* ----- drawing helpers ----- */
+  function pill(text, x, y, align = 'left', bg = 'rgba(8,14,22,.66)', fg = '#fff') {
+    ctx.font = '600 12px "JetBrains Mono", ui-monospace, monospace';
+    const w = ctx.measureText(text).width + 14, h = 22;
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = clamp(x0, 4, W - w - 4);
+    const y0 = clamp(y - h / 2, 4, H - h - 4);
+    ctx.fillStyle = bg; roundRect(x0, y0, w, h, 6); ctx.fill();
+    ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x0 + 7, y0 + h / 2 + 0.5);
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function arrow(x1, y1, x2, y2, color, lw = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), hl = 10;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * hl * 0.6, y2 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * hl, y2 - Math.sin(a - 0.45) * hl);
+    ctx.lineTo(x2 - Math.cos(a + 0.45) * hl, y2 - Math.sin(a + 0.45) * hl); ctx.closePath(); ctx.fill();
+  }
+  function niceStep(span) {
+    const raw = span / 6, p = Math.pow(10, Math.floor(Math.log10(raw))), n = raw / p;
+    return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p;
+  }
+
+  function backdrop(pl, gy) {
+    const g = ctx.createLinearGradient(0, 0, 0, gy);
+    g.addColorStop(0, pl.sky[0]); g.addColorStop(1, pl.sky[1]);
+    ctx.fillStyle = g; ctx.fillRect(-20, -20, W + 40, gy + 20);
+    if (pl.id === 'earth') {
+      const sx = W * 0.13, sy = H * 0.15;
+      const sg = ctx.createRadialGradient(sx, sy, 4, sx, sy, 70); sg.addColorStop(0, 'rgba(255,248,214,.95)'); sg.addColorStop(0.3, 'rgba(255,240,190,.5)'); sg.addColorStop(1, 'rgba(255,240,190,0)');
+      ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 70, 0, 7); ctx.fill();
+      ctx.fillStyle = '#FFF6D6'; ctx.beginPath(); ctx.arc(sx, sy, 18, 0, 7); ctx.fill();
+      clouds.forEach(c => {
+        const x = ((c[0] * (W + 240) + tVis * c[3]) % (W + 240)) - 120, y = c[1] * gy, s = c[2] * clamp(W / 700, 0.6, 1.3);
+        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        ctx.beginPath(); ctx.ellipse(x, y, 46 * s, 15 * s, 0, 0, 7); ctx.ellipse(x - 26 * s, y + 4 * s, 24 * s, 11 * s, 0, 0, 7); ctx.ellipse(x + 24 * s, y - 6 * s, 28 * s, 15 * s, 0, 0, 7); ctx.fill();
+      });
+      hills(gy, pl.far, 46, 0.006, 1.2); hills(gy, pl.near, 24, 0.013, 3.1);
+    } else if (pl.id === 'moon') {
+      stars.forEach(s => { ctx.globalAlpha = 0.45 + 0.55 * Math.abs(Math.sin(tVis * 0.8 + s[3])); ctx.fillStyle = '#fff'; ctx.fillRect(s[0] * W, s[1] * gy, s[2], s[2]); });
+      ctx.globalAlpha = 1;
+      const ex = W * 0.8, ey = H * 0.17, er = 17;
+      ctx.fillStyle = '#2F74C9'; ctx.beginPath(); ctx.arc(ex, ey, er, 0, 7); ctx.fill();
+      ctx.fillStyle = '#5DA65A'; ctx.beginPath(); ctx.ellipse(ex - 4, ey - 3, 7, 5, 0.6, 0, 7); ctx.ellipse(ex + 6, ey + 6, 4, 3, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(3,5,11,.55)'; ctx.beginPath(); ctx.arc(ex + 8, ey, er, -1.4, 1.4); ctx.fill();
+      hills(gy, pl.far, 34, 0.009, 0.4, true); hills(gy, pl.near, 16, 0.02, 2.2, true);
+    } else if (pl.id === 'mars') {
+      ctx.fillStyle = 'rgba(255,245,230,.9)'; ctx.beginPath(); ctx.arc(W * 0.18, H * 0.16, 10, 0, 7); ctx.fill();
+      ctx.fillStyle = pl.far;
+      ctx.beginPath(); ctx.moveTo(-10, gy);
+      const mesas = [[0.05, 0.22, 62], [0.3, 0.44, 40], [0.62, 0.9, 74]];
+      mesas.forEach(([a, b, hgt]) => { ctx.lineTo(a * W, gy); ctx.lineTo(a * W + 18, gy - hgt); ctx.lineTo(b * W - 18, gy - hgt); ctx.lineTo(b * W, gy); });
+      ctx.lineTo(W + 10, gy); ctx.closePath(); ctx.fill();
+      hills(gy, pl.near, 14, 0.016, 1.7);
+    } else {
+      const bands = ['#C79B72', '#E8CFAE', '#B7865F', '#F1DEC2', '#C28F69', '#E2C29C', '#A9774F'];
+      const bh = gy / bands.length;
+      bands.forEach((c, i) => {
+        ctx.fillStyle = c; ctx.beginPath(); ctx.moveTo(-10, i * bh + 6);
+        for (let x = -10; x <= W + 10; x += 14) ctx.lineTo(x, i * bh + 6 * Math.sin(x * 0.012 + tVis * 0.25 + i));
+        ctx.lineTo(W + 10, (i + 1) * bh + 10); ctx.lineTo(-10, (i + 1) * bh + 10); ctx.closePath(); ctx.fill();
+      });
+      ctx.fillStyle = 'rgba(176,82,50,.75)'; ctx.beginPath(); ctx.ellipse(W * 0.74, gy * 0.42, 44, 20, 0, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,235,210,.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(W * 0.74, gy * 0.42, 30, 12, 0.2 + tVis * 0.1, 0, 4.5); ctx.stroke();
+    }
+  }
+  function hills(gy, color, amp, freq, ph, craters) {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(-10, gy + 2);
+    for (let x = -10; x <= W + 10; x += 8) {
+      let y = amp * (0.6 + 0.4 * Math.sin(x * freq + ph)) + amp * 0.35 * Math.sin(x * freq * 2.7 + ph * 2);
+      if (craters) y -= Math.abs(Math.sin(x * freq * 3.3)) * amp * 0.25;
+      ctx.lineTo(x, gy - y);
+    }
+    ctx.lineTo(W + 10, gy + 2); ctx.closePath(); ctx.fill();
+  }
+  function ground(pl, gy) {
+    ctx.fillStyle = pl.ground; ctx.fillRect(-20, gy, W + 40, H - gy + 20);
+    if (pl.id === 'jupiter') {
+      for (let x = -20; x < W + 20; x += 24) { ctx.fillStyle = (Math.floor(x / 24) % 2) ? '#F2C230' : '#1D2126'; ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x + 12, gy); ctx.lineTo(x + 24, gy + 7); ctx.lineTo(x + 12, gy + 7); ctx.fill(); }
+      ctx.fillStyle = 'rgba(255,255,255,.08)'; for (let x = 10; x < W; x += 40) ctx.fillRect(x, gy + 14, 2, H - gy);
+    } else {
+      ctx.fillStyle = pl.lip; ctx.fillRect(-20, gy, W + 40, 5);
+      ctx.fillStyle = 'rgba(0,0,0,.14)'; speck.forEach(s => { ctx.beginPath(); ctx.arc(s[0] * W, gy + 9 + s[1] * (H - gy - 12), s[2], 0, 7); ctx.fill(); });
+    }
+  }
+  function ruler(zeroY, scale, view, label0) {
+    const x = W - 14, step = niceStep(view);
+    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x, zeroY); ctx.lineTo(x, Math.max(8, zeroY - view * scale)); ctx.stroke();
+    for (let v = 0; v <= view + 1e-6; v += step) {
+      const y = zeroY - v * scale; if (y < 10) break;
+      ctx.beginPath(); ctx.moveTo(x - 9, y); ctx.lineTo(x, y); ctx.stroke();
+      pill((v === 0 && label0) ? label0 : (step < 1 ? fmt(v, 1) : fmt(v, 0)) + ' m', x - 13, y, 'right', 'rgba(8,14,22,.5)');
+    }
+    for (let v = step / 2; v <= view; v += step) { const y = zeroY - v * scale; if (y < 10) break; ctx.beginPath(); ctx.moveTo(x - 5, y); ctx.lineTo(x, y); ctx.stroke(); }
+  }
+  function drawBall(x, cy, r, label, peFrac, keFrac, v, haloColor) {
+    if (peFrac > 0.02) {
+      const g = ctx.createRadialGradient(x, cy, r * 0.7, x, cy, r * 2.4);
+      g.addColorStop(0, `rgba(${haloColor},${0.6 * peFrac})`); g.addColorStop(1, `rgba(${haloColor},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, cy, r * 2.4, 0, 7); ctx.fill();
+    }
+    if (keFrac > 0.05 && Math.abs(v) > 1.5) {
+      const dir = v > 0 ? 1 : -1;
+      for (let i = 1; i <= 4; i++) {
+        ctx.strokeStyle = `rgba(255,170,40,${0.55 * keFrac * (1 - i / 5)})`; ctx.lineWidth = 2.5;
+        const off = (i * 0.38) * r;
+        ctx.beginPath(); ctx.moveTo(x - r * 0.6 + off * 0.2, cy + dir * (r + 4 + i * 7)); ctx.lineTo(x - r * 0.6 + off * 0.2, cy + dir * (r + 12 + i * 11 * keFrac)); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + r * 0.6 - off * 0.2, cy + dir * (r + 4 + i * 7)); ctx.lineTo(x + r * 0.6 - off * 0.2, cy + dir * (r + 12 + i * 11 * keFrac)); ctx.stroke();
+      }
+    }
+    const g = ctx.createRadialGradient(x - r * 0.35, cy - r * 0.4, r * 0.1, x, cy, r);
+    g.addColorStop(0, '#A9BEFF'); g.addColorStop(0.45, '#3A60DE'); g.addColorStop(1, '#172A73');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(10,18,50,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = `700 ${r > 15 ? 11 : 9.5}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, cy + 1); ctx.textAlign = 'left';
+  }
+  function particles(dt, bx, gy, dustColor) {
+    ctx.fillStyle = dustColor;
+    S.particles = S.particles.filter(p => (p.age += dt) < p.life);
+    S.particles.forEach(p => {
+      p.vy += 900 * dt * clamp(P().g / 9.81, 0.25, 2); p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.y > 0) { p.y = 0; p.vy *= -0.3; p.vx *= 0.6; }
+      ctx.globalAlpha = 1 - p.age / p.life; ctx.beginPath(); ctx.arc(bx + p.x, gy + p.y - 1, p.r, 0, 7); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  /* ----- scene: drop ----- */
+  const dropR = () => 11 + 9 * Math.sqrt((D.m - 0.2) / 19.8);
+  let dropGeom = null;
+  function drawDrop(dt) {
+    const pl = P(), gy = H - Math.max(44, H * 0.12), top = 34, r = dropR();
+    const sc = (gy - top - 2 * r) / S.view, bx = Math.round(W * 0.42);
+    dropGeom = { gy, sc, bx, r };
+    backdrop(pl, gy); ground(pl, gy);
+    ruler(gy, sc, S.view);
+
+    if (D.crater > 0) {
+      ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(bx, gy + 3, D.crater, D.crater * 0.17, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.beginPath(); ctx.ellipse(bx, gy + 1, D.crater * 0.9, D.crater * 0.07, 0, Math.PI, 0); ctx.fill();
+    }
+    // tower + platform
+    const py = gy - D.h * sc, tl = bx - r - 78, tr = bx - r - 22;
+    ctx.strokeStyle = '#2E3943'; ctx.lineWidth = 2;
+    ctx.fillStyle = '#7C8B99';
+    ctx.fillRect(tl - 3, py, 6, gy - py); ctx.fillRect(tr - 3, py, 6, gy - py);
+    ctx.strokeStyle = 'rgba(46,57,67,.75)'; ctx.lineWidth = 2;
+    const seg = Math.max(28, Math.min(60, (gy - py) / 6));
+    ctx.beginPath();
+    for (let y = py; y < gy - 2; y += seg) { const y2 = Math.min(gy, y + seg); ctx.moveTo(tl, y); ctx.lineTo(tr, y2); ctx.moveTo(tr, y); ctx.lineTo(tl, y2); }
+    ctx.stroke();
+    ctx.fillStyle = '#3A4652'; ctx.fillRect(tl - 14, py, (bx - r - 10) - (tl - 14), 8);
+    ctx.save(); ctx.translate(bx - r - 10, py);
+    ctx.rotate(D.trap * Math.PI * 0.47);
+    ctx.fillStyle = '#4E5C69'; ctx.fillRect(0, 0, 2 * r + 20, 7);
+    ctx.restore();
+    ctx.fillStyle = '#F2C230'; ctx.beginPath(); ctx.arc(bx - r - 10, py + 4, 3.2, 0, 7); ctx.fill();
+
+    const e = energies(), E0 = e.E0 || 1;
+    const cy = gy - D.y * sc - r;
+    // trail
+    if (S.trail && D.trail.length) {
+      D.trail.forEach((y, i) => {
+        const ty = gy - y * sc - r;
+        ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(bx, ty, r * 0.92, 0, 7); ctx.fill(); ctx.stroke();
+      });
+      if (D.trail.length > 2) pill('one ghost every 0.1 s', bx - r - 16, gy - D.trail[1] * sc - r, 'right');
+    }
+    // shadow
+    const hFrac = clamp((D.y * sc) / (gy - top), 0, 1);
+    ctx.fillStyle = `rgba(0,0,0,${0.3 * (1 - hFrac * 0.8)})`;
+    ctx.beginPath(); ctx.ellipse(bx, gy + 3, r * (1.3 - hFrac * 0.7), r * 0.28 * (1.3 - hFrac * 0.7), 0, 0, 7); ctx.fill();
+
+    drawBall(bx, cy, r, (D.m < 10 ? fmt(D.m) : fmt(D.m, 0)) + 'kg', e.pe / E0, e.ke / E0, D.v, '150,110,255');
+
+    // height marker
+    if (D.y > 0.02) {
+      const hx = bx + r + 30, yb = gy - D.y * sc;
+      ctx.setLineDash([5, 5]); ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(bx + r + 6, yb); ctx.lineTo(hx + 8, yb); ctx.moveTo(hx, yb); ctx.lineTo(hx, gy); ctx.stroke(); ctx.setLineDash([]);
+      pill('h = ' + fmt(D.y) + ' m', hx + 8, (yb + gy) / 2, 'left', 'rgba(106,67,214,.92)');
+    }
+    // speed arrow
+    if (S.arrow && Math.abs(D.v) > 0.3) {
+      const L = clamp(Math.abs(D.v) * 4.5, 14, 170), dir = D.v > 0 ? -1 : 1;
+      const ax = bx - r - 34;
+      arrow(ax, cy, ax, cy + dir * L, '#FFB02E', 4);
+      pill('v = ' + fmt(Math.abs(D.v)) + ' m/s', ax - 8, cy + dir * L * 0.5, 'right', 'rgba(150,85,0,.9)');
+    }
+    particles(dt, bx, gy, pl.dust);
+    if (D.phase === 'ready') pill(`PE = ${fmtJ(e.pe)}`, bx, cy - r - 18, 'center', 'rgba(106,67,214,.95)');
+  }
+
+  /* ----- scene: spring ----- */
+  const springR = () => 12 + 8 * Math.sqrt((SP.m - 0.2) / 4.8);
+  let springGeom = null;
+  function drawSpringScene(dt) {
+    const pl = P(), gy = H - Math.max(44, H * 0.12), top = 34, r = springR();
+    const L0 = clamp(H * 0.22, 70, 130), natTop = gy - 12 - L0, perM = L0 * 0.75 / 0.5;
+    const zero = natTop - 6, sc = (zero - top - 2 * r) / S.view, cx = Math.round(W * 0.45);
+    springGeom = { gy, natTop, perM, sc, cx, r, zero };
+    backdrop(pl, gy); ground(pl, gy);
+    ruler(zero, sc, S.view, 'spring top');
+    const e = energies(), E0 = e.E0 || 1;
+    const comp = Math.max(0, -SP.y), sTop = natTop + comp * perM;
+
+    // predicted top
+    const rise = springRise() - SP.x;
+    if (rise > 0) {
+      const py = zero - rise * sc;
+      ctx.setLineDash([7, 6]); ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cx - 90, py); ctx.lineTo(cx + 90, py); ctx.stroke(); ctx.setLineDash([]);
+      pill(`predicted top (no air) ${fmt(rise, 2)} m`, cx - 90, py - 15, 'left', 'rgba(31,140,76,.92)');
+    }
+    if (SP.maxY > 0.01) {
+      const my = zero - SP.maxY * sc;
+      ctx.strokeStyle = '#FFB02E'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cx - 30, my); ctx.lineTo(cx + 30, my); ctx.stroke();
+      if (rise <= 0 || Math.abs(SP.maxY - rise) * sc > 30) pill(`highest so far ${fmt(SP.maxY, 2)} m`, cx - 36, my + 14, 'right', 'rgba(150,85,0,.9)');
+    }
+    // base
+    ctx.fillStyle = '#3A4652'; roundRect(cx - 46, gy - 12, 92, 12, 3); ctx.fill();
+    // glow for elastic energy
+    const elFrac = (e.el || 0) / E0;
+    if (elFrac > 0.02) {
+      const g = ctx.createRadialGradient(cx, (sTop + gy) / 2, 4, cx, (sTop + gy) / 2, 80);
+      g.addColorStop(0, `rgba(60,210,120,${0.55 * elFrac})`); g.addColorStop(1, 'rgba(60,210,120,0)');
+      ctx.fillStyle = g; ctx.fillRect(cx - 90, sTop - 40, 180, gy - sTop + 50);
+    }
+    // coil
+    const coils = 9, n = coils * 2, bot = gy - 12, span = bot - sTop - 4, half = 22;
+    const coilPath = () => { ctx.beginPath(); ctx.moveTo(cx, bot); ctx.lineTo(cx, bot - 2); for (let i = 1; i < n; i++) ctx.lineTo(cx + (i % 2 ? half : -half), bot - 2 - span * i / n); ctx.lineTo(cx, sTop + 2); };
+    coilPath(); ctx.strokeStyle = '#2B333B'; ctx.lineWidth = 6; ctx.lineJoin = 'round'; ctx.stroke();
+    coilPath(); ctx.strokeStyle = elFrac > 0.02 ? `rgb(${Math.round(190 - 120 * elFrac)},${Math.round(200 + 20 * elFrac)},${Math.round(210 - 90 * elFrac)})` : '#C3CCD5'; ctx.lineWidth = 3; ctx.stroke();
+    // cap
+    ctx.fillStyle = '#56636F'; roundRect(cx - 30, sTop - 6, 60, 7, 2); ctx.fill();
+    // latch
+    if (SP.phase === 'ready') {
+      ctx.fillStyle = '#F2C230';
+      ctx.fillRect(cx - 40, sTop - 8, 8, 12); ctx.fillRect(cx + 32, sTop - 8, 8, 12);
+      ctx.fillRect(cx - 40, sTop - 8, 14, 4); ctx.fillRect(cx + 26, sTop - 8, 14, 4);
+      ctx.fillStyle = '#3A4652'; ctx.fillRect(cx - 42, sTop + 4, 4, bot - sTop - 4); ctx.fillRect(cx + 38, sTop + 4, 4, bot - sTop - 4);
+    }
+    // ball
+    const bb = SP.y < 0 ? sTop - 6 : zero - SP.y * sc;
+    const cy = bb - r;
+    ctx.fillStyle = 'rgba(0,0,0,.25)'; const hf = clamp((zero - bb) / (zero - top), 0, 1);
+    ctx.beginPath(); ctx.ellipse(cx, gy + 3, 26 * (1 - hf * 0.6), 5 * (1 - hf * 0.6), 0, 0, 7); ctx.fill();
+    drawBall(cx, cy, r, fmt(SP.m) + 'kg', e.pe / E0, e.ke / E0, SP.v, '150,110,255');
+    if (SP.y > 0.02) pill('h = ' + fmt(SP.y, 2) + ' m', cx + r + 12, cy, 'left', 'rgba(106,67,214,.92)');
+    if (comp > 0.005) pill('x = ' + fmt(comp, 2) + ' m', cx - 52, (sTop + bot) / 2, 'right', 'rgba(31,140,76,.92)');
+    if (S.arrow && Math.abs(SP.v) > 0.3) {
+      const L = clamp(Math.abs(SP.v) * 6, 14, 160), dir = SP.v > 0 ? -1 : 1, ax = cx - r - 24;
+      arrow(ax, cy, ax, cy + dir * L, '#FFB02E', 4);
+      pill('v = ' + fmt(Math.abs(SP.v)) + ' m/s', ax - 8, cy + dir * L * 0.5, 'right', 'rgba(150,85,0,.9)');
+    }
+    if (SP.phase === 'ready') pill(`Elastic PE = ${fmtJ(e.el)}`, cx, cy - r - 18, 'center', 'rgba(31,140,76,.95)');
+  }
+
+  /* ----- graph ----- */
+  function drawGraph() {
+    const c = gctx; c.setTransform(DPR, 0, 0, DPR, 0, 0); c.clearRect(0, 0, GW, GH);
+    const pl = 46, pr = 10, pt = 8, pb = 24, w = GW - pl - pr, h = GH - pt - pb;
+    if (w < 20 || h < 20) return;
+    const sm = S.mode === 'drop' ? D.samples : SP.samples;
+    const keys = S.mode === 'drop' ? [['pe', C.pe], ['ke', C.ke], ['heat', C.heat]] : [['el', C.elastic], ['pe', C.pe], ['ke', C.ke], ['heat', C.heat]];
+    const E0 = S.mode === 'drop' ? D.E0 : SP.E0;
+    c.font = '11px "JetBrains Mono", ui-monospace, monospace'; c.textBaseline = 'middle';
+    if (!sm.length || !E0) {
+      c.strokeStyle = C.line; c.lineWidth = 1; c.beginPath(); c.moveTo(pl, pt); c.lineTo(pl, pt + h); c.lineTo(pl + w, pt + h); c.stroke();
+      c.fillStyle = C.muted; c.textAlign = 'center';
+      c.fillText(S.mode === 'drop' ? 'Press Drop to record a graph' : 'Press Release to record a graph', pl + w / 2, pt + h / 2);
+      c.textAlign = 'left'; return;
+    }
+    const tEnd = sm[sm.length - 1].t, span = Math.max(3, Math.min(10, Math.ceil(tEnd + 0.4))), t0 = Math.max(0, tEnd - span);
+    const X = t => pl + (t - t0) / span * w, Y = v => pt + h - v / E0 * h;
+    c.strokeStyle = C.line; c.lineWidth = 1; c.fillStyle = C.muted;
+    for (let i = 0; i <= 4; i++) {
+      const v = E0 * i / 4, y = Y(v);
+      c.beginPath(); c.moveTo(pl, y); c.lineTo(pl + w, y); c.stroke();
+      c.textAlign = 'right'; c.fillText(i === 0 ? '0' : fmtJ(v).replace(' J', ''), pl - 6, y);
+    }
+    const tStep = span <= 4 ? 0.5 : 1;
+    c.textAlign = 'center';
+    for (let t = Math.ceil(t0 / tStep) * tStep; t <= t0 + span + 1e-6; t += tStep) {
+      const x = X(t); c.fillText(fmt(t, tStep < 1 ? 1 : 0) + 's', x, pt + h + 13);
+    }
+    c.textAlign = 'left';
+    keys.forEach(([k, col]) => {
+      c.strokeStyle = col; c.lineWidth = 2.4; c.lineJoin = 'round'; c.beginPath();
+      let started = false;
+      sm.forEach(s => { if (s.t < t0) return; const x = X(s.t), y = Y(s[k]); if (!started) { c.moveTo(x, y); started = true; } else c.lineTo(x, y); });
+      c.stroke();
+      const lastS = sm[sm.length - 1]; c.fillStyle = col; c.beginPath(); c.arc(X(lastS.t), Y(lastS[k]), 3.5, 0, 7); c.fill();
+    });
+  }
+
+  /* ----- UI: bars, readouts, equation ----- */
+  const BAR_DEF = {
+    drop: [['pe', 'Stored', 'height (PE)', 'var(--pe)'], ['ke', 'Motion', 'kinetic (KE)', 'var(--ke)'], ['heat', 'Heat & sound', 'lost to air, ground', 'var(--heat)']],
+    spring: [['el', 'Spring', 'elastic PE', 'var(--elastic)'], ['pe', 'Height', 'gravitational PE', 'var(--pe)'], ['ke', 'Motion', 'kinetic (KE)', 'var(--ke)'], ['heat', 'Heat & sound', 'lost to air', 'var(--heat)']]
+  };
+  let barEls = [];
+  function buildBars() {
+    const defs = BAR_DEF[S.mode];
+    $('#pe-bars').innerHTML = defs.map(([k, l, s, col]) => `<div class="bar-row"><div class="bl">${l}<small>${s}</small></div><div class="track"><div class="fill" style="background:${col}"></div></div><div class="bv">0 J</div></div>`).join('');
+    barEls = $$('#pe-bars .bar-row').map((row, i) => ({ k: defs[i][0], fill: $('.fill', row), val: $('.bv', row) }));
+    $('#pe-legend').innerHTML = defs.map(([k, l, s, col]) => `<span><i style="background:${col}"></i>${l}</span>`).join('');
+  }
+  const ro = $$('#pe-readouts .ro').map(el => ({ l: $('.ro-l', el), v: $('.ro-v', el) }));
+  function setRO(i, label, val, unit) { if (ro[i].l.textContent !== label) ro[i].l.textContent = label; ro[i].v.innerHTML = `${val}<small>${unit}</small>`; }
+  let uiTick = 0;
+  function updateUI() {
+    const e = energies(), E0 = e.E0 || 1;
+    barEls.forEach(b => { const v = e[b.k] || 0; b.fill.style.width = clamp(v / E0 * 100, 0, 100) + '%'; b.val.textContent = fmtJ(v); });
+    $('#pe-total').textContent = fmtJ(e.E0) + (S.mode === 'drop' ? (D.phase === 'ready' ? '' : '  (stays the same)') : (SP.phase === 'ready' ? '' : '  (stays the same)'));
+    if (S.mode === 'drop') {
+      setRO(0, 'Height', fmt(D.y), 'm'); setRO(1, 'Speed', fmt(Math.abs(D.v)), 'm/s');
+      setRO(2, 'Stored energy (PE)', fmtJ(e.pe).replace(/ k?J$/, ''), fmtJ(e.pe).endsWith('kJ') ? 'kJ' : 'J');
+      setRO(3, 'Motion energy (KE)', fmtJ(e.ke).replace(/ k?J$/, ''), fmtJ(e.ke).endsWith('kJ') ? 'kJ' : 'J');
+    } else {
+      setRO(0, 'Squash (x)', fmt(Math.max(0, -SP.y), 2), 'm'); setRO(1, 'Speed', fmt(Math.abs(SP.v)), 'm/s');
+      setRO(2, 'Height above spring', fmt(Math.max(0, SP.y), 2), 'm');
+      setRO(3, 'Spring energy', fmtJ(e.el).replace(/ k?J$/, ''), fmtJ(e.el).endsWith('kJ') ? 'kJ' : 'J');
+    }
+    const lab = $('#pe-act-label'), ph = S.mode === 'drop' ? D.phase : SP.phase;
+    if (ph !== 'ready') $('#pe-hint').hidden = true;
+    const want = S.mode === 'drop' ? (ph === 'ready' ? 'Drop' : 'Drop again') : (ph === 'ready' ? 'Release' : 'Launch again');
+    if (lab.textContent !== want) lab.textContent = want;
+  }
+  function updateEq() {
+    const pl = P(), g = pl.g;
+    let html = '';
+    if (S.mode === 'drop') {
+      const pe = D.m * g * D.h, v = Math.sqrt(2 * g * D.h), apples = pe / (0.1 * 9.81);
+      html = `<div class="line">PE = m × g × h = ${fmt(D.m)} kg × ${fmt(g, 2)} m/s² × ${fmt(D.h)} m = <b>${fmtJ(pe)}</b></div>
+        <div class="line">Landing speed with no air: v = √(2 × g × h) = √(2 × ${fmt(g, 2)} × ${fmt(D.h)}) = <b class="ke">${fmt(v)} m/s</b></div>
+        <p class="note">${fmtJ(pe)} is about the energy to lift a 100 g apple by 1 m, ${apples >= 10 ? fmt(apples, 0) : fmt(apples, 1)} times. Notice the landing speed doesn't depend on mass. Try it.</p>`;
+    } else {
+      const el = 0.5 * SP.k * SP.x * SP.x, rise = el / (SP.m * g), above = rise - SP.x;
+      html = `<div class="line">Elastic PE = ½ × k × x² = ½ × ${fmt(SP.k, 0)} N/m × (${fmt(SP.x, 2)} m)² = <b class="el">${fmtJ(el)}</b></div>
+        <div class="line">Height it can climb = PE ÷ (m × g) = ${fmt(el, 1)} ÷ (${fmt(SP.m)} × ${fmt(g, 2)}) = <b>${fmt(rise, 2)} m</b> from the start</div>
+        <p class="note">${above > 0 ? `The ball leaves the spring after ${fmt(SP.x, 2)} m, so it should top out about <b>${fmt(above, 2)} m above the spring</b>. Squashing twice as far stores 4 times the energy, because x is squared.` : `That's less than the ${fmt(SP.x, 2)} m the spring is squashed, so the ball can't leave the spring here. Make the spring stiffer, squash it more, or use a lighter ball.`}</p>`;
+    }
+    $('#pe-eq').innerHTML = html;
+    // planet + air notes
+    $('#pe-g-out').textContent = `g = ${fmt(g, 2)} m/s²`;
+    $('#pe-planet-note').textContent = pl.note;
+    const an = $('#pe-air-note');
+    if (S.air && pl.rho === 0) { an.hidden = false; an.textContent = 'The Moon has no air, so there is nothing to slow the ball down.'; }
+    else if (S.air && pl.id === 'mars') { an.hidden = false; an.textContent = 'Mars has very thin air, so the effect is tiny.'; }
+    else if (S.air) { an.hidden = false; an.textContent = 'Air pushes against the moving ball. Light balls feel it most. Some energy turns into heat in the air.'; }
+    else an.hidden = true;
+  }
+
+  /* ----- main loop ----- */
+  function targetView() {
+    if (S.mode === 'drop') return Math.max(6, D.h * 1.15 + 0.8);
+    const rise = springRise() - SP.x;
+    return Math.max(2.5, Math.max(rise, SP.maxY) * 1.15 + 0.4);
+  }
+  function drawAll(dt = 0) {
+    if (!W || !H) return;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.save();
+    if (S.shake > 0.1) ctx.translate((rnd() - 0.5) * S.shake * 2, (rnd() - 0.5) * S.shake * 2);
+    if (S.mode === 'drop') drawDrop(dt); else drawSpringScene(dt);
+    ctx.restore();
+    drawGraph();
+    updateUI();
+  }
+  function frame(ts) {
+    raf = requestAnimationFrame(frame);
+    let dt = last ? (ts - last) / 1000 : 0; last = ts;
+    dt = clamp(dt, 0, 0.05);
+    tVis += dt;
+    acc += dt * S.speed;
+    let n = 0;
+    while (acc >= STEP && n < 60) { if (S.mode === 'drop') stepDrop(STEP); else stepSpring(STEP); acc -= STEP; n++; }
+    if (n >= 60) acc = 0;
+    if (D.phase !== 'ready') D.trap = Math.min(1, D.trap + dt * 6);
+    if (!S.dragging) S.view += (targetView() - S.view) * Math.min(1, dt * 5);
+    S.shake *= Math.pow(0.002, dt);
+    drawAll(dt * Math.max(S.speed, 0.25));
+  }
+  function start() {
+    if (running) return; running = true; last = 0;
+    fit(); readColors(); S.view = targetView(); drawAll(); raf = requestAnimationFrame(frame);
+  }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  /* ----- actions & controls ----- */
+  function resetMode() {
+    if (S.mode === 'drop') dropReset(); else springReset();
+    status(S.mode === 'drop' ? 'Ready. The ball is sitting still, so all its energy is stored.' : 'Ready. The latch holds the squashed spring, so its energy is stored.');
+    updateEq();
+  }
+  function act() {
+    audio();
+    if (S.mode === 'drop') dropStart(); else springStart();
+  }
+  $('#pe-act').addEventListener('click', act);
+  $('#pe-reset').addEventListener('click', resetMode);
+
+  /* Each control = slider + a number box you can type into. Both stay in sync.
+     factor converts the slider value to what is shown (e.g. 0.4 -> 40 %). */
+  function bindRange(id, unit, dec, apply, needsReset = true, factor = 1) {
+    const el = $('#' + id), out = $('#' + id + '-out');
+    const name = ($(`label[for="${id}"]`) || {}).textContent || id;
+    const lo = parseFloat(el.min), hi = parseFloat(el.max);
+    const wrap = document.createElement('span'); wrap.className = 'num';
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.id = id + '-num'; inp.inputMode = 'decimal'; inp.step = 'any';
+    inp.min = String(lo * factor); inp.max = String(hi * factor);
+    inp.setAttribute('aria-label', `${name}, type a value from ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}`);
+    inp.title = `Type a value from ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}`;
+    const u = document.createElement('span'); u.className = 'unit'; u.textContent = unit;
+    wrap.append(inp, u); out.replaceWith(wrap);
+    const round = v => { const p = Math.pow(10, dec); return Math.round(v * factor * p) / p / factor; };
+    const show = v => { inp.value = (v * factor).toFixed(dec); };
+    const set = v => { apply(v); if (needsReset) resetMode(); else updateEq(); };
+    show(parseFloat(el.value));
+    el.addEventListener('input', () => { const v = parseFloat(el.value); show(v); set(v); });
+    // live update while typing, but only for complete, in-range numbers
+    inp.addEventListener('input', () => {
+      const v = parseFloat(inp.value) / factor;
+      if (!isFinite(v) || v < lo || v > hi) return;
+      const r = round(v); el.value = r; set(r);
+    });
+    // on Enter / leaving the box: fix empty or out-of-range values and say so
+    const commit = () => {
+      const raw = parseFloat(inp.value) / factor;
+      if (!isFinite(raw)) { show(parseFloat(el.dataset.last || el.value)); flash(); return; }
+      const v = round(clamp(raw, lo, hi));
+      el.value = v; show(v); set(v);
+      if (v !== round(raw)) {
+        flash();
+        status(`${name} can be ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}, so it was set to ${fmt(v * factor, dec)} ${unit}.`);
+      }
+    };
+    const flash = () => { wrap.classList.remove('flash'); void wrap.offsetWidth; wrap.classList.add('flash'); };
+    inp.addEventListener('change', commit);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); commit(); inp.select(); } });
+    inp.addEventListener('focus', () => { el.dataset.last = el.value; inp.select(); });
+    return { el, sync: (v) => { el.value = v; show(v); } };
+  }
+  const rM = bindRange('pe-m', 'kg', 1, v => D.m = v);
+  const rH = bindRange('pe-h', 'm', 1, v => D.h = v);
+  bindRange('pe-e', '%', 0, v => D.e = v, false, 100);
+  bindRange('pe-sm', 'kg', 1, v => SP.m = v);
+  bindRange('pe-k', 'N/m', 0, v => SP.k = v);
+  const rX = bindRange('pe-x', 'm', 2, v => SP.x = v);
+
+  $$('input[name="pe-planet"]').forEach(r => r.addEventListener('change', () => { S.planet = r.value; resetMode(); }));
+  $$('input[name="pe-speed"]').forEach(r => r.addEventListener('change', () => { S.speed = parseFloat(r.value); }));
+  $('#pe-air').addEventListener('change', e => { S.air = e.target.checked; updateEq(); });
+  $('#pe-trail').addEventListener('change', e => { S.trail = e.target.checked; });
+  $('#pe-arrow').addEventListener('change', e => { S.arrow = e.target.checked; });
+  $('#pe-sound').addEventListener('change', e => { S.sound = e.target.checked; });
+
+  function setMode(m) {
+    S.mode = m;
+    $$('.tabs [role=tab]', root).forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+    $('#pe-ctl-drop').hidden = m !== 'drop'; $('#pe-ctl-spring').hidden = m !== 'spring';
+    $('#pe-hint').textContent = m === 'drop' ? 'Drag the ball up or down to change its height' : 'Drag the ball down to squash the spring';
+    $('#pe-lab-sub').textContent = m === 'drop'
+      ? 'Set the height and mass, pick a planet, then drop the ball. Watch the purple stored-energy bar turn into orange motion energy.'
+      : 'Squash the spring, then release it. Green spring energy becomes motion, then height energy at the top of the flight.';
+    cv.setAttribute('aria-label', m === 'drop' ? 'Simulation of a ball dropped from a tower. Press Space to drop, arrow keys to change height.' : 'Simulation of a ball launched by a spring. Press Space to release, arrow keys to change squash distance.');
+    S.particles = []; buildBars(); resetMode(); S.view = targetView();
+  }
+  $$('.tabs [role=tab]', root).forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  /* drag on canvas */
+  function ptr(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  cv.addEventListener('pointerdown', e => {
+    const p = ptr(e);
+    if (S.mode === 'drop' && dropGeom) {
+      const { gy, sc, bx, r } = dropGeom;
+      if (D.phase !== 'ready') { dropReset(); }
+      const cy = gy - D.y * sc - r;
+      if (Math.hypot(p.x - bx, p.y - cy) < r + 22) { S.dragging = true; cv.setPointerCapture(e.pointerId); cv.classList.add('dragging'); $('#pe-hint').hidden = true; }
+    } else if (springGeom) {
+      const { cx, r, natTop, perM } = springGeom;
+      if (SP.phase !== 'ready') springReset();
+      const cy = natTop + SP.x * perM - 6 - r;
+      if (Math.hypot(p.x - cx, p.y - cy) < r + 26) { S.dragging = true; cv.setPointerCapture(e.pointerId); cv.classList.add('dragging'); $('#pe-hint').hidden = true; }
+    }
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!S.dragging) return;
+    const p = ptr(e);
+    if (S.mode === 'drop') {
+      const { gy, sc, r } = dropGeom;
+      const h = clamp(Math.round(((gy - p.y - r) / sc) * 2) / 2, 1, 30);
+      if (h !== D.h) { D.h = h; rH.sync(h); dropReset(); updateEq(); }
+    } else {
+      const { natTop, perM, r } = springGeom;
+      const x = clamp(Math.round(((p.y + r + 6 - natTop) / perM) * 100) / 100, 0.05, 0.5);
+      if (x !== SP.x) { SP.x = x; rX.sync(x); springReset(); updateEq(); }
+    }
+  });
+  const endDrag = () => { if (!S.dragging) return; S.dragging = false; cv.classList.remove('dragging'); status(S.mode === 'drop' ? `Height set to ${fmt(D.h)} m. Press Drop when you're ready.` : `Spring squashed by ${fmt(SP.x, 2)} m. Press Release when you're ready.`); };
+  cv.addEventListener('pointerup', endDrag); cv.addEventListener('pointercancel', endDrag);
+  cv.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); act(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault(); const d = e.key === 'ArrowUp' ? 1 : -1;
+      if (S.mode === 'drop') { D.h = clamp(D.h + d * 0.5, 1, 30); rH.sync(D.h); }
+      else { SP.x = clamp(Math.round((SP.x - d * 0.01) * 100) / 100, 0.05, 0.5); rX.sync(SP.x); }
+      resetMode();
+    }
+  });
+
+  /* ----- quiz ----- */
+  const QUIZ = [
+    { q: 'A 2 kg book sits on a shelf 1.5 m high. Using g = 10 m/s², how much gravitational potential energy does it have?', o: ['3 J', '15 J', '30 J', '300 J'], a: 2, hint: 'multiply all three numbers: m × g × h.', why: 'PE = m × g × h = 2 × 10 × 1.5 = 30 J.' },
+    { q: 'You move the same box to a shelf twice as high. Its potential energy…', o: ['stays the same', 'doubles', 'becomes 4 times bigger', 'halves'], a: 1, hint: 'look at the formula. h is multiplied once, not squared.', why: 'PE grows in step with height. Double h and you double PE. Check it in the drop test: 10 m → 20 m.' },
+    { q: 'The same rock is held 5 m up on Earth and 5 m up on the Moon. Where does it store more potential energy?', o: ['On Earth', 'On the Moon', 'The same in both places', 'It depends on the rock\'s colour'], a: 0, hint: 'which place has the bigger g?', why: 'Earth\'s gravity (9.81 m/s²) is about 6 times stronger than the Moon\'s (1.62 m/s²), so m × g × h is bigger on Earth.' },
+    { q: 'As a ball falls with no air resistance, its potential energy mostly turns into…', o: ['heat', 'kinetic energy (motion)', 'extra mass', 'elastic energy'], a: 1, hint: 'the ball gets faster and faster as it falls.', why: 'Height energy becomes motion energy. Just before landing, nearly all the PE has become KE. Watch the purple and orange bars swap.' },
+    { q: 'You squash a spring twice as far. The elastic energy stored in it is…', o: ['the same', '2 times as much', '4 times as much', 'half as much'], a: 2, hint: 'in ½ × k × x², the x is squared.', why: 'Elastic PE = ½ × k × x². Because x is squared, doubling x gives 2 × 2 = 4 times the energy. Try 0.2 m and then 0.4 m in the spring launcher.' }
+  ];
+  const answered = {};
+  const qf = $('#pe-quiz');
+  qf.innerHTML = QUIZ.map((it, i) => `
+    <fieldset class="q" id="pe-q${i}">
+      <legend><span>Q${i + 1}</span>${it.q}</legend>
+      <div class="opts">${it.o.map((o, j) => `<div class="opt"><input type="radio" name="pe-q${i}" id="pe-q${i}-${j}" value="${j}"><label for="pe-q${i}-${j}">${o}</label></div>`).join('')}</div>
+      <div class="fb" hidden></div>
+    </fieldset>`).join('');
+  qf.addEventListener('submit', e => e.preventDefault());
+  qf.addEventListener('change', e => {
+    const m = e.target.name.match(/^pe-q(\d+)$/); if (!m) return;
+    const i = +m[1], it = QUIZ[i], j = +e.target.value, fs = $('#pe-q' + i);
+    const ok = j === it.a;
+    if (!(i in answered)) answered[i] = ok;
+    $$('.opt', fs).forEach((o, k) => { o.classList.toggle('right', ok && k === it.a); o.classList.toggle('wrong', !ok && k === j); });
+    const fb = $('.fb', fs); fb.hidden = false; fb.className = 'fb ' + (ok ? 'right' : 'wrong');
+    fb.innerHTML = ok ? `<b>Correct.</b> ${it.why}` : `<b>Not quite.</b> Have another go. Hint: ${it.hint}`;
+    const n = Object.keys(answered).length, right = Object.values(answered).filter(Boolean).length;
+    $('#pe-quiz-score').textContent = `${right} of ${n} right first time${n === QUIZ.length ? ' · all answered' : ''}`;
+  });
+
+  /* ----- init ----- */
+  buildBars(); dropReset(); springReset(); updateEq();
+  return { start, stop };
+}
+})();
+</script>
+</body>
+</html>
