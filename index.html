@@ -147,6 +147,26 @@ a{color:var(--accent)}
 .c-head .lead{font-size:1.15rem;max-width:58ch}
 .c-head .lead strong{color:var(--pe)}
 .c-head .lead strong.ke-strong{color:var(--ke-ink)}
+.c-head .lead strong.pn-strong{color:var(--accent)}
+.bars.compact{gap:6px}
+.bars.compact .track{height:10px}
+.bars.compact .bar-row .bl{font-size:12.5px}
+.bars.compact .bar-row .bl small{display:inline;margin-left:4px}
+.bars.compact .bar-row .bv{font-size:12px}
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px}
+.live-grid .feature{grid-template-columns:minmax(0,1fr)}
+.live-grid .feature-art{order:-1;border-left:0;border-bottom:1px solid var(--line);min-height:0;padding:14px}
+.live-grid .feature-art svg{max-width:330px}
+.live-grid .feature-body{padding:22px;gap:12px}
+.live-grid .feature-body h2{font-size:clamp(1.5rem,2.4vw,1.9rem)}
+.live-grid .feature .btn{margin-top:auto}
+.p-swing{transform-box:view-box;transform-origin:140px 30px;animation:p-swing 1.5s ease-in-out infinite alternate}
+.p-pe{transform-box:fill-box;transform-origin:0 50%;animation:p-pe 1.5s ease-in-out infinite alternate}
+.p-ke{transform-box:fill-box;transform-origin:0 50%;animation:p-ke 1.5s ease-in-out infinite alternate}
+@keyframes p-swing{from{transform:rotate(-32deg)}to{transform:rotate(32deg)}}
+@keyframes p-pe{0%{transform:scaleX(1)}50%{transform:scaleX(.03)}100%{transform:scaleX(1)}}
+@keyframes p-ke{0%{transform:scaleX(.03)}50%{transform:scaleX(1)}100%{transform:scaleX(.03)}}
+@media (prefers-reduced-motion: reduce){.p-swing,.p-pe,.p-ke{animation:none}}
 .link-chip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;padding:8px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--ink);text-decoration:none}
 .link-chip:hover{border-color:var(--accent)}
 .link-chip b{color:var(--accent)}
@@ -160,6 +180,7 @@ a{color:var(--accent)}
 .formula{font:700 clamp(2rem,4.4vw,3rem)/1 var(--f-display);display:flex;align-items:center;gap:.28em;flex-wrap:wrap}
 .formula .v{padding:.06em .24em;border-radius:.18em;background:var(--panel-2);border:1px solid var(--line)}
 .formula .v.pe{background:var(--pe-soft);color:var(--pe);border-color:transparent}
+.formula .v.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
 .formula .v.ke{background:var(--ke-soft);color:var(--ke-ink);border-color:transparent}
 .formula .op{color:var(--muted);font-weight:500}
 .vars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -347,6 +368,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
       <a href="#">All concepts</a>
       <a href="#potential-energy">Potential energy</a>
       <a href="#kinetic-energy">Kinetic energy</a>
+      <a href="#pendulums">Pendulums</a>
     </nav>
   </header>
 
@@ -361,7 +383,8 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
       <div class="hero-art"><canvas id="hero-atom" aria-hidden="true"></canvas><span class="hero-cap">Carbon atom · 6 protons, 6 neutrons</span></div>
     </section>
 
-    <div id="featured"></div>
+    <div class="section-head" style="margin-top:8px"><h2>Open labs</h2><p id="live-count"></p></div>
+    <div id="featured" class="live-grid"></div>
 
     <div class="section-head">
       <h2>Coming next to the lab</h2>
@@ -717,8 +740,179 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
         <div class="ex"><span class="kind" style="color:var(--accent)">Spinning</span><h3>Electric car braking</h3><p>Electric cars use the motor as a generator when slowing down, turning kinetic energy back into battery charge.</p></div>
         <div class="ex"><span class="kind" style="color:var(--heat)">Impact</span><h3>Meteor craters</h3><p>A rock about 50 m across, moving at over 10 km per second, blasted out Meteor Crater in Arizona, more than a kilometre wide.</p></div>
       </div>
-      <nav class="series-nav" aria-label="More concepts"><a href="#potential-energy"><small>Previous concept</small><b>← Potential Energy</b></a></nav>
+      <nav class="series-nav" aria-label="More concepts"><a href="#potential-energy"><small>Previous concept</small><b>← Potential Energy</b></a><a class="next" href="#pendulums"><small>Next concept</small><b>Pendulums →</b></a></nav>
       <footer class="foot"><span>Variable Lab · Kinetic Energy</span><span>Braking uses real grip values for each road surface.</span></footer>
+    </article>
+    <!-- ---------- PENDULUMS ---------- -->
+    <article data-concept="pendulums" hidden>
+      <section class="c-head">
+        <div>
+          <span class="eyebrow">Physics · Motion</span>
+          <h1>Pendulums</h1>
+          <p class="lead"><strong class="pn-strong">A pendulum is a weight hanging from a string or rod that swings back and forth.</strong> One full swing, there and back, always takes the same time. That time is called the <em>period</em>. The steady beat made pendulums the heart of clocks for almost 300 years.</p>
+          <a class="link-chip" href="#kinetic-energy">Connects to <b>Potential</b> and <b>Kinetic Energy</b>: every swing trades one for the other.</a>
+        </div>
+        <div class="formula-card" aria-label="Pendulum period formula">
+          <span class="eyebrow">Period of a pendulum</span>
+          <div class="formula"><span class="v acc">T</span><span class="op">=</span><span class="v">2π</span><span class="op">×</span><span class="v">√(L ÷ g)</span></div>
+          <div class="vars">
+            <div><b>T</b>period: time for one full swing there and back, in seconds (s)</div>
+            <div><b>L</b>length from the pivot to the middle of the bob, in metres (m)</div>
+            <div><b>g</b>strength of gravity, 9.81 m/s² on Earth</div>
+          </div>
+          <div class="unit">Notice what's <b>missing</b>: the mass of the bob and how far you pull it back. For normal swings, neither changes the period.</div>
+        </div>
+      </section>
+
+      <div class="facts">
+        <div class="fact"><span class="eyebrow">Idea 1</span><h3>Length sets the beat</h3><p>Longer pendulums swing more slowly. Make one 4 times longer and each swing takes twice as long, because of the square root.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 2</span><h3>Mass doesn't matter</h3><p>A heavy bob and a light bob on the same length of string swing in step. Gravity pulls harder on the heavy one, but it is also harder to get moving.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 3</span><h3>Energy swaps sides</h3><p>At each end the bob stops for an instant: all stored (potential) energy. At the bottom it moves fastest: all motion (kinetic) energy.</p></div>
+      </div>
+      <div class="types">
+        <span class="label">Where the energy is:</span>
+        <span class="type"><i style="background:var(--pe)"></i>Ends of the swing <small>all potential energy</small></span>
+        <span class="type"><i style="background:var(--ke)"></i>Bottom of the swing <small>all kinetic energy</small></span>
+        <span class="type"><i style="background:var(--heat)"></i>With air <small>a little turns to heat each swing</small></span>
+      </div>
+
+      <!-- LAB -->
+      <section class="lab-wrap" id="pn-lab" aria-labelledby="pn-lab-title">
+        <div class="lab-title">
+          <div>
+            <span class="eyebrow">Interactive lab</span>
+            <h2 id="pn-lab-title">Try it yourself</h2>
+            <p id="pn-lab-sub">Pull the bob to the side and let go. A stopwatch measures each period so you can test the formula.</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Experiment">
+            <button role="tab" id="pn-tab-swing" aria-selected="true" data-mode="swing">Swing lab</button>
+            <button role="tab" id="pn-tab-wave" aria-selected="false" data-mode="wave">Pendulum wave</button>
+          </div>
+        </div>
+
+        <div class="lab">
+          <div class="lab-stage">
+            <div class="stage" id="pn-stage-box">
+              <canvas id="pn-stage" tabindex="0" role="img" aria-label="Simulation of a swinging pendulum. Press Space to release, arrow keys to change the length."></canvas>
+              <div class="stage-hint" id="pn-hint">Drag the bob to set its length and angle, then let go</div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="pn-act" type="button">
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+                <span id="pn-act-label">Release</span>
+              </button>
+              <button class="btn ghost" id="pn-reset" type="button">Reset</button>
+              <p class="status" id="pn-status" aria-live="polite">Ready. The bob is held at the start angle.</p>
+            </div>
+            <div class="readouts" id="pn-readouts">
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+            </div>
+          </div>
+
+          <aside class="controls" aria-label="Experiment controls">
+            <p class="type-tip"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 8h1M7 8h1M10 8h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Drag a slider, or click a number and type an exact value.</p>
+            <div class="ctl">
+              <div class="ctl-h"><span class="lbl" id="pn-planet-l">Planet</span><output id="pn-g-out">g = 9.81 m/s²</output></div>
+              <div class="seg" role="radiogroup" aria-labelledby="pn-planet-l">
+                <input type="radio" name="pn-planet" id="pn-pl-earth" value="earth" checked><label for="pn-pl-earth">Earth<small>9.81</small></label>
+                <input type="radio" name="pn-planet" id="pn-pl-moon" value="moon"><label for="pn-pl-moon">Moon<small>1.62</small></label>
+                <input type="radio" name="pn-planet" id="pn-pl-mars" value="mars"><label for="pn-pl-mars">Mars<small>3.71</small></label>
+                <input type="radio" name="pn-planet" id="pn-pl-jupiter" value="jupiter"><label for="pn-pl-jupiter">Jupiter<small>24.8</small></label>
+              </div>
+            </div>
+
+            <div id="pn-ctl-swing" class="ctl" style="gap:18px">
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-L">Length (L)</label><output id="pn-L-out" for="pn-L">1.00 m</output></div>
+                <input type="range" id="pn-L" min="0.1" max="3" step="0.05" value="1">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-m">Bob mass (m)</label><output id="pn-m-out" for="pn-m">1.0 kg</output></div>
+                <input type="range" id="pn-m" min="0.1" max="5" step="0.1" value="1">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-a">Release angle</label><output id="pn-a-out" for="pn-a">30°</output></div>
+                <input type="range" id="pn-a" min="5" max="80" step="1" value="30">
+                <small class="help">How far the bob is pulled back from hanging straight down.</small>
+              </div>
+            </div>
+
+            <div id="pn-ctl-wave" class="ctl" style="gap:18px" hidden>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-n">Number of pendulums</label><output id="pn-n-out" for="pn-n">12</output></div>
+                <input type="range" id="pn-n" min="6" max="16" step="1" value="12">
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-tc">Pattern time</label><output id="pn-tc-out" for="pn-tc">60 s</output></div>
+                <input type="range" id="pn-tc" min="30" max="120" step="5" value="60">
+                <small class="help">After this long, every pendulum lines up again.</small>
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="pn-wa">Swing angle</label><output id="pn-wa-out" for="pn-wa">15°</output></div>
+                <input type="range" id="pn-wa" min="5" max="20" step="1" value="15">
+              </div>
+            </div>
+
+            <div class="toggles">
+              <label class="tog" id="pn-air-row">Air resistance <input type="checkbox" id="pn-air"></label>
+              <label class="tog">Show trail <input type="checkbox" id="pn-trail" checked></label>
+              <label class="tog">Show speed arrow <input type="checkbox" id="pn-arrow" checked></label>
+              <label class="tog">Tick sound <input type="checkbox" id="pn-sound" checked></label>
+            </div>
+            <div class="ctl">
+              <div class="ctl-h"><span class="lbl" id="pn-speed-l">Playback speed</span></div>
+              <div class="seg three" role="radiogroup" aria-labelledby="pn-speed-l">
+                <input type="radio" name="pn-speed" id="pn-sp-fast" value="3"><label for="pn-sp-fast">Fast</label>
+                <input type="radio" name="pn-speed" id="pn-sp-norm" value="1" checked><label for="pn-sp-norm">Normal</label>
+                <input type="radio" name="pn-speed" id="pn-sp-slow" value="0.3"><label for="pn-sp-slow">Slow</label>
+              </div>
+            </div>
+          </aside>
+
+          <div class="lab-data">
+            <div class="eq" id="pn-eq" aria-live="polite"></div>
+            <div class="data-grid">
+              <div class="panel">
+                <h3><span id="pn-bars-title" style="font:inherit;color:inherit">Energy right now</span> <span id="pn-bars-sub">bars share one scale</span></h3>
+                <div class="bars" id="pn-bars"></div>
+                <div class="total"><span id="pn-total-l">Total energy</span><b id="pn-total">0 J</b></div>
+              </div>
+              <div class="panel">
+                <h3><span id="pn-graph-title" style="font:inherit;color:inherit">Angle over time</span> <span id="pn-graph-sub">degrees vs seconds</span></h3>
+                <div class="graph-box"><canvas id="pn-graph" role="img" aria-label="Graph of the swing angle over time"></canvas></div>
+                <div class="legend" id="pn-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGES + QUIZ -->
+      <section class="learn">
+        <div class="panel">
+          <h2>Lab challenges</h2>
+          <p class="sub">Each one ticks itself off when you do it in the lab above. <span class="ch-count" id="pn-ch-count">0 / 5</span></p>
+          <ul class="ch-list" id="pn-ch"></ul>
+        </div>
+        <div class="panel">
+          <h2>Check yourself</h2>
+          <p class="sub">Pick an answer to see the explanation. <span class="score" id="pn-quiz-score"></span></p>
+          <form id="pn-quiz"></form>
+        </div>
+      </section>
+
+      <div class="section-head"><h2>Where you meet pendulums</h2></div>
+      <div class="examples">
+        <div class="ex"><span class="kind" style="color:var(--accent)">Timekeeping</span><h3>Big Ben's clock</h3><p>Its 3.9 m pendulum ticks every 2 seconds. Engineers fine-tune it by adding or removing old pennies from the pendulum.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--ke-ink)">Play</span><h3>Playground swings</h3><p>A swing is a pendulum. Kicking your legs at the right moment in each swing adds energy, so you go higher.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--pe)">Engineering</span><h3>Taipei 101</h3><p>This skyscraper hides a 660-tonne steel ball hung like a pendulum. It swings against strong winds to keep the tower steady.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--elastic)">Discovery</span><h3>Foucault's pendulum</h3><p>A very long pendulum slowly changes the direction it swings over a day. That showed people the Earth is spinning.</p></div>
+      </div>
+      <nav class="series-nav" aria-label="More concepts"><a href="#kinetic-energy"><small>Previous concept</small><b>← Kinetic Energy</b></a></nav>
+      <footer class="foot"><span>Variable Lab · Pendulums</span><span>The swing lab solves the full pendulum equation, so big swings behave like real ones.</span></footer>
     </article>
   </main>
 </div>
@@ -784,6 +978,19 @@ const ART = {
       <circle cx="54" cy="198" r="4" fill="var(--panel)"/><circle cx="112" cy="198" r="4" fill="var(--panel)"/>
     </g>
   </svg>`,
+  pend: `<svg viewBox="0 0 380 260" role="img" aria-label="A pendulum swings while its height-energy and motion-energy bars trade places">
+    <rect x="50" y="20" width="180" height="11" rx="3" fill="var(--ink)" opacity=".85"/>
+    <path d="M51 172A168 168 0 0 0 229 172" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 6" opacity=".7"/>
+    <line x1="140" y1="30" x2="140" y2="214" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 5" opacity=".5"/>
+    <g class="p-swing"><line x1="140" y1="30" x2="140" y2="184" stroke="var(--ink)" stroke-width="2.5"/><circle cx="140" cy="198" r="16" fill="var(--accent)"/><circle cx="134" cy="192" r="4.5" fill="#fff" opacity=".5"/></g>
+    <circle cx="140" cy="30" r="5" fill="var(--ink)"/>
+    <g font-family="JetBrains Mono, monospace" font-size="12" fill="var(--muted)"><text x="250" y="92">height</text><text x="250" y="148">motion</text></g>
+    <rect x="250" y="100" width="110" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="p-pe" x="250" y="100" width="110" height="14" rx="4" fill="var(--pe)"/>
+    <rect x="250" y="156" width="110" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="p-ke" x="250" y="156" width="110" height="14" rx="4" fill="var(--ke)"/>
+  </svg>`,
+  proj: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 52Q30 -6 58 52" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="3 4"/><rect x="2" y="50" width="60" height="4" rx="2" fill="var(--ink)"/><circle cx="33" cy="22" r="5" fill="var(--ke)"/><path d="M6 50l8-10" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/></svg>`,
   pendulum: `<svg viewBox="0 0 64 64" aria-hidden="true"><line x1="10" y1="8" x2="54" y2="8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><line x1="32" y1="8" x2="46" y2="46" stroke="var(--muted)" stroke-width="2"/><circle cx="46" cy="47" r="7" fill="var(--accent)"/><path d="M18 46a16 16 0 0 0 28 0" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 3"/></svg>`,
   buoy: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="30" width="52" height="28" rx="4" fill="var(--accent-soft)"/><path d="M6 30q6.5-4 13 0t13 0 13 0 13 0" fill="none" stroke="var(--accent)" stroke-width="2"/><rect x="22" y="20" width="20" height="16" rx="3" fill="var(--ke)"/><circle cx="44" cy="52" r="4" fill="var(--muted)"/></svg>`,
   circuit: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="14" width="44" height="36" rx="6" fill="none" stroke="var(--ink)" stroke-width="3"/><rect x="6" y="26" width="8" height="12" rx="2" fill="var(--accent)"/><path d="M26 14l3-5 4 10 4-10 3 5" fill="none" stroke="var(--heat)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="40" cy="50" r="6" fill="var(--ke)"/></svg>`
@@ -1103,7 +1310,11 @@ const CONCEPTS = [
     tags: ['Physics', 'Energy', 'Ages 11–16', '2 experiments'],
     blurb: 'Crash a car into barrels and race it to a red light. See why doubling your speed means four times the energy and four times the braking distance.',
     factory: () => createKE(), soft: 'ke-soft' },
-  { id: 'pendulum', title: 'Pendulums', ready: false, art: 'pendulum', blurb: 'Does a longer string swing slower? Does a heavier bob change anything?' },
+  { id: 'pendulums', title: 'Pendulums', ready: true, art: 'pend',
+    tags: ['Physics', 'Motion', 'Ages 11–16', '2 experiments'],
+    blurb: 'Time a swinging bob with a stopwatch, change its length, mass and planet, then watch a row of pendulums make waves.',
+    factory: () => createPN(), soft: 'accent-soft' },
+  { id: 'projectiles', title: 'Projectile Motion', ready: false, art: 'proj', blurb: 'Launch a ball at any angle and speed. Which angle goes furthest?' },
   { id: 'buoyancy', title: 'Buoyancy & Density', ready: false, art: 'buoy', blurb: 'Why a steel ship floats but a steel nail sinks.' },
   { id: 'ohms-law', title: "Ohm's Law", ready: false, art: 'circuit', blurb: 'Turn up the voltage, add resistance, and watch the current change.' }
 ];
@@ -1119,7 +1330,8 @@ function renderHub() {
         <span class="btn">Open the lab <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
       <div class="feature-art" style="background:var(--${c.soft})">${ART[c.art]}</div>
-    </a>`).join('<div style="height:16px"></div>');
+    </a>`).join('');
+  $('#live-count').textContent = `${live.length} concepts ready to explore`;
   $('#soon').innerHTML = CONCEPTS.filter(c => !c.ready).map(c => `
     <div class="soon">${ART[c.art]}<h3>${c.title}</h3><p>${c.blurb}</p><div><span class="tag">Coming soon</span></div></div>`).join('');
 }
@@ -2579,6 +2791,480 @@ function createKE() {
   ]);
 
   buildBars(); crashReset(); brakeReset(); updateEq();
+  return { start, stop };
+}
+
+/* =====================================================================
+   PENDULUMS LAB
+   ===================================================================== */
+function createPN() {
+  const root = $('[data-concept="pendulums"]');
+  const cv = $('#pn-stage'), ctx = cv.getContext('2d');
+  const gcv = $('#pn-graph'), gctx = gcv.getContext('2d');
+  let W = 0, H = 0, DPR = 1, GW = 0, GH = 0, raf = 0, last = 0, acc = 0, tVis = 0, running = false;
+  const STEP = 1 / 2000, TAU = Math.PI * 2, DEG = Math.PI / 180;
+  const PL = {
+    earth:   { name: 'Earth', g: 9.81, sky: ['#4F92DA', '#BFE1F6'], ground: '#5C8E3A', lip: '#3E6826', hill: '#7FAE62' },
+    moon:    { name: 'Moon', g: 1.62, sky: ['#03050B', '#171B28'], ground: '#8D8F96', lip: '#64666D', hill: '#4A4E58', stars: true },
+    mars:    { name: 'Mars', g: 3.71, sky: ['#C78A66', '#F0CBA8'], ground: '#AE522D', lip: '#80381B', hill: '#C27A58' },
+    jupiter: { name: 'Jupiter', g: 24.79, sky: ['#B1845E', '#EAD3B4'], ground: '#5E6771', lip: '#3D444C', hill: '#C79B72' }
+  };
+  const S = { mode: 'swing', planet: 'earth', L: 1, m: 1, a0: 30, side: 1, air: false, trail: true, arrow: true, sound: true, speed: 1, view: 1.25, dragging: false };
+  const SW = { th: 0, w: 0, phase: 'ready', t: 0, E0: 0, cross: [], periods: [], trail: [], trailT: 0, samples: [], sampT: 0, ghost: null, runL: 1, runM: 1, runA: 30, logged: false };
+  const WV = { N: 12, Tc: 60, a0: 15, t: 0, phase: 'ready', said: 0 };
+  const runs = [];
+  const g = () => PL[S.planet].g;
+  let seed = 23; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const stars = Array.from({ length: 120 }, () => [rnd(), rnd() * 0.8, 0.5 + rnd() * 1.2, rnd() * 6.28]);
+
+  function fit() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.max(1, Math.round(W * DPR)); cv.height = Math.max(1, Math.round(H * DPR));
+    const q = gcv.getBoundingClientRect(); GW = q.width; GH = q.height;
+    gcv.width = Math.max(1, Math.round(GW * DPR)); gcv.height = Math.max(1, Math.round(GH * DPR));
+  }
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe($('#pn-stage-box'));
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe(gcv.parentElement);
+
+  const statusEl = $('#pn-status');
+  const status = s => { statusEl.textContent = s; };
+  const complete = makeChallenges($('#pn-ch'), $('#pn-ch-count'), 'vl-pn-challenges', [
+    { id: 'mass', text: 'Measure the period with a light bob (under 0.5 kg), then a heavy one (over 4 kg), at the same length. Did it change?' },
+    { id: 'length4', text: 'Measure a period, then make the string 4 times longer and measure again. How many times longer is the period?' },
+    { id: 'second', text: 'Build a "seconds pendulum" on Earth: a measured period of 2.00 s, one second each way.' },
+    { id: 'moon', text: 'Measure a period on the Moon. Would a pendulum clock run fast or slow there?' },
+    { id: 'wave', text: 'In the pendulum wave, keep watching until every pendulum lines up again.' }
+  ], m => { statusEl.textContent = statusEl.textContent.replace(/ ✓ Challenge complete.*$/, '') + ' ✓ ' + m; });
+
+  /* ----- sound: soft clock tick at the bottom of each swing ----- */
+  let tickHi = false;
+  function tick() {
+    if (!S.sound) return; const a = getAudio(); if (!a) return;
+    const t = a.currentTime, o = a.createOscillator(), gn = a.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime((tickHi = !tickHi) ? 1250 : 980, t);
+    gn.gain.setValueAtTime(0.035, t); gn.gain.exponentialRampToValueAtTime(0.0005, t + 0.05);
+    o.connect(gn).connect(a.destination); o.start(t); o.stop(t + 0.06);
+  }
+
+  /* ----- swing physics (full equation, not the small-angle shortcut) ----- */
+  const Tsimple = () => TAU * Math.sqrt(S.L / g());
+  const Tbig = (a) => { const th = a * DEG; return Tsimple() * (1 + th * th / 16 + 11 * Math.pow(th, 4) / 3072); };
+  const bobR = () => 9 + 10 * Math.cbrt(S.m / 5);
+  function energies() {
+    if (S.mode !== 'swing') return { pe: 0, ke: 0, heat: 0, E0: 1 };
+    const pe = S.m * g() * S.L * (1 - Math.cos(SW.th)), ke = 0.5 * S.m * Math.pow(S.L * SW.w, 2);
+    const E0 = SW.phase === 'ready' ? pe : SW.E0;
+    return { pe, ke, heat: Math.max(0, E0 - pe - ke), E0 };
+  }
+  function swingReset() {
+    SW.th = S.side * S.a0 * DEG; SW.w = 0; SW.phase = 'ready'; SW.t = 0; SW.cross = []; SW.periods = [];
+    SW.trail = []; SW.trailT = 0; SW.samples = []; SW.sampT = 0; SW.logged = false;
+  }
+  function swingStart() {
+    if (SW.samples.length > 40) SW.ghost = { samples: SW.samples, label: `last run: L = ${fmt(SW.runL, 2)} m` };
+    swingReset();
+    SW.phase = 'swinging'; SW.E0 = S.m * g() * S.L * (1 - Math.cos(SW.th));
+    SW.runL = S.L; SW.runM = S.m; SW.runA = S.a0;
+    SW.samples.push({ t: 0, a: SW.th / DEG });
+    status(`Let go from ${fmt(S.a0, 0)}°. The formula predicts T = 2π√(L/g) = ${fmt(Tsimple(), 2)} s. Watch the stopwatch.`);
+  }
+  function onPeriod(T) {
+    const n = SW.periods.length, Tp = Tsimple();
+    const diff = (T / Tp - 1) * 100;
+    status(`Swing ${n}: measured period ${fmt(T, 2)} s. The simple formula says ${fmt(Tp, 2)} s${Math.abs(diff) >= 1 ? ` (${diff > 0 ? '+' : ''}${fmt(diff, 0)}%, because big swings take a little longer)` : ', a match'}.`);
+    if (!SW.logged) {
+      SW.logged = true;
+      const r = { L: S.L, m: S.m, planet: S.planet, T };
+      if (runs.some(q => Math.abs(q.L - r.L) < 0.001 && q.planet === r.planet && ((q.m < 0.5 && r.m > 4) || (q.m > 4 && r.m < 0.5)))) complete('mass');
+      if (runs.some(q => q.planet === r.planet && Math.abs(r.L / q.L - 4) < 0.1)) complete('length4');
+      if (r.planet === 'earth' && Math.abs(T - 2) <= 0.02) complete('second');
+      if (r.planet === 'moon') complete('moon');
+      runs.push(r);
+    }
+  }
+  function stepSwing(dt) {
+    if (SW.phase !== 'swinging') return;
+    const c = S.air ? 0.05 : 0, prev = SW.th;
+    SW.w += (-(g() / S.L) * Math.sin(SW.th) - (c / S.m) * SW.w) * dt;
+    SW.th += SW.w * dt; SW.t += dt;
+    if ((prev < 0) !== (SW.th < 0)) {
+      tick();
+      if (SW.w > 0) {
+        const tc = SW.t - dt * (SW.th / (SW.th - prev));
+        SW.cross.push(tc);
+        if (SW.cross.length >= 2) { const T = tc - SW.cross[SW.cross.length - 2]; SW.periods.push(T); onPeriod(T); }
+      }
+    }
+    SW.trailT += dt; if (SW.trailT >= 0.02) { SW.trailT = 0; SW.trail.push(SW.th); if (SW.trail.length > 45) SW.trail.shift(); }
+    SW.sampT += dt; if (SW.sampT >= 1 / 40) { SW.sampT = 0; SW.samples.push({ t: SW.t, a: SW.th / DEG }); if (SW.samples.length > 2400) SW.samples.shift(); }
+    if (S.air && SW.E0 > 0 && energies().pe + energies().ke < SW.E0 * 0.002 && SW.phase === 'swinging') { SW.phase = 'done'; status('The swing has died away. Air resistance turned all the energy into a little heat.'); }
+  }
+
+  /* ----- pendulum wave (each pendulum makes one more swing than its neighbour) ----- */
+  function waveSet() {
+    const K0 = Math.max(4, Math.round(WV.Tc / 2.6)), out = [];
+    for (let k = 0; k < WV.N; k++) { const n = K0 + k, T = WV.Tc / n; out.push({ n, T, L: g() * Math.pow(T / TAU, 2) }); }
+    return out;
+  }
+  function waveStart() { WV.t = 0; WV.phase = 'running'; WV.said = 0; status(`Released together. Each pendulum has a slightly different length, so they drift out of step…`); }
+  function stepWave(dt) {
+    if (WV.phase !== 'running') return;
+    const prev = WV.t; WV.t += dt;
+    const half = WV.Tc / 2;
+    if (prev < half && WV.t >= half) status(`Halfway (${fmt(half, 0)} s): every other pendulum now swings the opposite way, in two neat groups.`);
+    const k = Math.floor(WV.t / WV.Tc);
+    if (k > WV.said) { WV.said = k; status(`${fmt(WV.Tc * k, 0)} s: they're all back in line! Each one did a whole number of swings, so the pattern starts again.`); complete('wave'); }
+    else if (prev < WV.Tc * 0.25 && WV.t >= WV.Tc * 0.25) status('Look at the view from above: the bobs make a snake shape that keeps changing.');
+  }
+
+  /* ----- drawing helpers ----- */
+  function roundRect(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function pill(text, x, y, align = 'left', bg = 'rgba(8,14,22,.66)', fg = '#fff') {
+    ctx.font = '600 12px "JetBrains Mono", ui-monospace, monospace';
+    const w = ctx.measureText(text).width + 14, h = 22;
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = clamp(x0, 4, W - w - 4);
+    const y0 = clamp(y - h / 2, 4, H - h - 4);
+    ctx.fillStyle = bg; roundRect(x0, y0, w, h, 6); ctx.fill();
+    ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x0 + 7, y0 + h / 2 + 0.5);
+  }
+  function arrow(x1, y1, x2, y2, color, lw = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), hl = 10;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * hl * 0.6, y2 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * hl, y2 - Math.sin(a - 0.45) * hl);
+    ctx.lineTo(x2 - Math.cos(a + 0.45) * hl, y2 - Math.sin(a + 0.45) * hl); ctx.closePath(); ctx.fill();
+  }
+  function niceStep(span, n = 6) { const raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), k = raw / p; return (k < 1.5 ? 1 : k < 3.5 ? 2 : k < 7.5 ? 5 : 10) * p; }
+  function scene(pl, floorY) {
+    const gr = ctx.createLinearGradient(0, 0, 0, floorY);
+    gr.addColorStop(0, pl.sky[0]); gr.addColorStop(1, pl.sky[1]);
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, floorY);
+    if (pl.stars) stars.forEach(s => { ctx.globalAlpha = 0.4 + 0.6 * Math.abs(Math.sin(tVis * 0.8 + s[3])); ctx.fillStyle = '#fff'; ctx.fillRect(s[0] * W, s[1] * floorY, s[2], s[2]); });
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = pl.hill; ctx.beginPath(); ctx.moveTo(0, floorY);
+    for (let x = 0; x <= W + 10; x += 10) ctx.lineTo(x, floorY - 18 - 12 * Math.sin(x * 0.012 + 1) - 6 * Math.sin(x * 0.031));
+    ctx.lineTo(W, floorY); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = pl.ground; ctx.fillRect(0, floorY, W, H - floorY);
+    ctx.fillStyle = pl.lip; ctx.fillRect(0, floorY, W, 4);
+  }
+  function frameStand(x1, x2, beamY, floorY) {
+    ctx.fillStyle = '#6B4A2E'; ctx.fillRect(x1 - 5, beamY, 10, floorY - beamY); ctx.fillRect(x2 - 5, beamY, 10, floorY - beamY);
+    ctx.fillStyle = '#8A6240'; roundRect(x1 - 14, beamY - 10, x2 - x1 + 28, 12, 3); ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(x1 - 5, beamY + 2, 10, 6); ctx.fillRect(x2 - 5, beamY + 2, 10, 6);
+  }
+  function bob(x, y, r, colA, colB, label) {
+    const gg = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+    gg.addColorStop(0, colA); gg.addColorStop(0.5, colB); gg.addColorStop(1, '#151A22');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.stroke();
+    if (label && r > 13) { ctx.fillStyle = '#fff'; ctx.font = `700 ${r > 16 ? 10.5 : 9}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x, y + 1); ctx.textAlign = 'left'; }
+  }
+
+  /* ----- scene: swing lab ----- */
+  let geom = null;
+  function drawSwing() {
+    const pl = PL[S.planet], floorY = H - Math.max(34, H * 0.08), beamY = 30, r = bobR();
+    const s = Math.min((floorY - beamY - 2 * r - 12) / S.view, (W / 2 - 34) / S.view);
+    const px = W / 2, py = beamY;
+    geom = { px, py, s, r };
+    scene(pl, floorY);
+    const half = Math.max(S.view * s * 0.98, 60) + 12;
+    frameStand(px - half, px + half, beamY, floorY);
+    // ruler down from the pivot
+    const rx = px + half - 22, step = niceStep(S.view, 5);
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(rx, py); ctx.lineTo(rx, py + S.view * s); ctx.stroke();
+    for (let v = 0; v <= S.view + 1e-6; v += step) { const y = py + v * s; ctx.beginPath(); ctx.moveTo(rx - 6, y); ctx.lineTo(rx, y); ctx.stroke(); if (v > 0) pill(fmt(v, step < 1 ? 1 : 0) + ' m', rx - 9, y, 'right', 'rgba(8,14,22,.45)'); }
+    const L = S.L * s, th = SW.th;
+    const bx = px + Math.sin(th) * L, by = py + Math.cos(th) * L;
+    // vertical reference + start-height line
+    ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + L + r + 6); ctx.stroke();
+    const startY = py + Math.cos(S.a0 * DEG) * L;
+    ctx.strokeStyle = 'rgba(190,160,255,.8)';
+    ctx.beginPath(); ctx.moveTo(px - Math.sin(S.a0 * DEG) * L - 20, startY); ctx.lineTo(px + Math.sin(S.a0 * DEG) * L + 20, startY); ctx.stroke();
+    ctx.setLineDash([]);
+    pill('start height', px - Math.sin(S.a0 * DEG) * L - 22, startY - 14, 'right', 'rgba(106,67,214,.85)');
+    // angle arc
+    const ar = Math.min(54, L * 0.45);
+    if (Math.abs(th) > 0.01 && ar > 14) {
+      ctx.strokeStyle = '#FFD166'; ctx.lineWidth = 2; ctx.beginPath();
+      const a1 = Math.PI / 2, a2 = Math.PI / 2 - th;
+      ctx.arc(px, py, ar, Math.min(a1, a2), Math.max(a1, a2)); ctx.stroke();
+      pill(`${fmt(Math.abs(th) / DEG, 0)}°`, px + Math.sin(th / 2) * (ar + 16) + (th > 0 ? 2 : -2), py + Math.cos(th / 2) * (ar + 16), th > 0 ? 'left' : 'right', 'rgba(150,100,0,.9)');
+    }
+    // trail
+    if (S.trail && SW.trail.length > 1) {
+      SW.trail.forEach((t, i) => { ctx.fillStyle = `rgba(255,255,255,${0.5 * i / SW.trail.length})`; ctx.beginPath(); ctx.arc(px + Math.sin(t) * L, py + Math.cos(t) * L, r * 0.35, 0, 7); ctx.fill(); });
+    }
+    // string + pivot
+    ctx.strokeStyle = '#E8E2D6'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+    ctx.fillStyle = '#2B323B'; ctx.beginPath(); ctx.arc(px, py, 5, 0, 7); ctx.fill();
+    // energy glow: purple when high, amber when fast
+    const e = energies(), E0 = e.E0 || 1;
+    [[e.pe / E0, '150,110,255'], [e.ke / E0, '255,170,40']].forEach(([f, c]) => {
+      if (f < 0.03) return;
+      const gg = ctx.createRadialGradient(bx, by, r * 0.6, bx, by, r * 2.8);
+      gg.addColorStop(0, `rgba(${c},${0.55 * f})`); gg.addColorStop(1, `rgba(${c},0)`);
+      ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bx, by, r * 2.8, 0, 7); ctx.fill();
+    });
+    ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(bx, floorY + 4, r * 1.2, 3.5, 0, 0, 7); ctx.fill();
+    bob(bx, by, r, '#D6E0FF', '#4867D6', fmt(S.m, 1) + 'kg');
+    // speed arrow (always along the swing direction)
+    const v = S.L * SW.w;
+    if (S.arrow && Math.abs(v) > 0.05) {
+      const len = clamp(Math.abs(v) * 28, 12, 120), dx = Math.cos(th) * Math.sign(SW.w), dy = -Math.sin(th) * Math.sign(SW.w);
+      arrow(bx + dx * (r + 4), by + dy * (r + 4), bx + dx * (r + 4 + len), by + dy * (r + 4 + len), '#FFB02E', 4);
+      pill(`v = ${fmt(Math.abs(v), 2)} m/s`, bx + dx * (r + 10 + len), by + dy * (r + 10 + len) + 16, dx > 0 ? 'left' : 'right', 'rgba(150,85,0,.9)');
+    }
+    // stopwatch
+    const Tm = SW.periods.length ? SW.periods[SW.periods.length - 1] : null;
+    pill(`⏱ ${fmt(SW.t, 1)} s · swings ${SW.periods.length}${Tm ? ` · period ${fmt(Tm, 2)} s` : ''}`, 12, 22, 'left', 'rgba(8,14,22,.72)');
+  }
+
+  /* ----- scene: pendulum wave ----- */
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  function drawWave() {
+    const pl = PL[S.planet], set = waveSet(), Lmax = set[0].L, amp = WV.a0 * DEG;
+    const stripH = Math.max(70, H * 0.2), floorY = H - stripH - 8, beamY = 30;
+    const s = (floorY - beamY - 40) / (Lmax * 1.12);
+    scene(pl, floorY);
+    const x0 = W * 0.1, x1 = W * 0.9, dx = (x1 - x0) / Math.max(1, WV.N - 1);
+    frameStand(x0 - 30, x1 + 30, beamY, floorY);
+    const t = WV.t, A = [142, 107, 255], B = [255, 176, 46];
+    const pts = set.map((p, k) => {
+      const th = amp * Math.cos(TAU * t / p.T), z = p.L * Math.sin(th), h = p.L * Math.cos(th);
+      const xk = x0 + k * dx;
+      return { k, xk, z, f: th / amp, x: xk + z * s * 0.45, y: beamY + h * s + z * s * 0.18, r: (7 + 5 * Math.min(1, dx / 60)) * (1 + z / Lmax * 0.6), col: mix(A, B, k / Math.max(1, WV.N - 1)), p };
+    });
+    ctx.strokeStyle = 'rgba(240,235,225,.85)'; ctx.lineWidth = 1.3;
+    pts.forEach(q => { ctx.beginPath(); ctx.moveTo(q.xk, beamY); ctx.lineTo(q.x, q.y); ctx.stroke(); });
+    pts.slice().sort((a, b) => a.z - b.z).forEach(q => {
+      const c = `rgb(${q.col.join(',')})`, hi = `rgb(${mix(q.col, [255, 255, 255], 0.6).join(',')})`;
+      bob(q.x, q.y, Math.max(4, q.r), hi, c, '');
+    });
+    // view from above
+    const sy = floorY + 10, sh = stripH - 6;
+    ctx.fillStyle = 'rgba(8,14,22,.6)'; roundRect(12, sy, W - 24, sh, 10); ctx.fill();
+    const mid = sy + sh / 2, zs = sh * 0.36;
+    ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 - 10, mid); ctx.lineTo(x1 + 10, mid); ctx.stroke();
+    ctx.strokeStyle = 'rgba(134,166,255,.8)'; ctx.lineWidth = 2; ctx.beginPath();
+    pts.forEach((q, i) => { const y = mid - q.f * zs; i ? ctx.lineTo(q.xk, y) : ctx.moveTo(q.xk, y); }); ctx.stroke();
+    pts.forEach(q => { ctx.fillStyle = `rgb(${q.col.join(',')})`; ctx.beginPath(); ctx.arc(q.xk, mid - q.f * zs, 4.5, 0, 7); ctx.fill(); });
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.font = '600 10.5px "JetBrains Mono", monospace'; ctx.textBaseline = 'bottom'; ctx.fillText('VIEW FROM ABOVE', 22, sy + sh - 5);
+    const cyc = WV.t % WV.Tc;
+    pill(`⏱ ${fmt(WV.t, 1)} s · lines up again in ${fmt(WV.Tc - cyc, 1)} s`, 12, 22, 'left', 'rgba(8,14,22,.72)');
+  }
+
+  /* ----- graph ----- */
+  function drawGraph() {
+    const c = gctx; c.setTransform(DPR, 0, 0, DPR, 0, 0); c.clearRect(0, 0, GW, GH);
+    const pl = 44, pr = 10, pt = 10, pb = 24, w = GW - pl - pr, h = GH - pt - pb;
+    if (w < 20 || h < 20) return;
+    c.font = '11px "JetBrains Mono", ui-monospace, monospace'; c.textBaseline = 'middle';
+    if (S.mode === 'wave') {
+      const set = waveSet(), Lm = set[0].L * 1.15, Tm = set[0].T * 1.15;
+      const X = L => pl + L / Lm * w, Y = T => pt + h - T / Tm * h;
+      c.strokeStyle = C.line; c.lineWidth = 1; c.fillStyle = C.muted;
+      const ls = niceStep(Lm, 4), ts = niceStep(Tm, 4);
+      for (let T = 0; T <= Tm; T += ts) { c.beginPath(); c.moveTo(pl, Y(T)); c.lineTo(pl + w, Y(T)); c.stroke(); c.textAlign = 'right'; c.fillText(fmt(T, ts < 1 ? 1 : 0) + 's', pl - 6, Y(T)); }
+      c.textAlign = 'center'; for (let L = 0; L <= Lm; L += ls) c.fillText(fmt(L, ls < 1 ? 1 : 0) + 'm', X(L), pt + h + 13);
+      c.strokeStyle = C.accent; c.lineWidth = 2; c.beginPath();
+      for (let i = 0; i <= 60; i++) { const L = Lm * i / 60, T = TAU * Math.sqrt(L / g()); i ? c.lineTo(X(L), Y(T)) : c.moveTo(X(L), Y(T)); }
+      c.stroke();
+      set.forEach((p, k) => { const col = mix([142, 107, 255], [255, 176, 46], k / Math.max(1, set.length - 1)); c.fillStyle = `rgb(${col.join(',')})`; c.beginPath(); c.arc(X(p.L), Y(p.T), 4, 0, 7); c.fill(); });
+      c.textAlign = 'left'; return;
+    }
+    const sm = SW.samples, amax = Math.max(S.a0, SW.ghost ? SW.runA : 0, 5) * 1.1;
+    const tEnd = sm.length ? sm[sm.length - 1].t : 0, span = 10, t0 = Math.max(0, tEnd - span);
+    const X = t => pl + (t - t0) / span * w, Y = a => pt + h / 2 - a / amax * (h / 2);
+    c.strokeStyle = C.line; c.lineWidth = 1; c.fillStyle = C.muted;
+    [-1, -0.5, 0, 0.5, 1].forEach(f => { const a = f * amax; c.beginPath(); c.moveTo(pl, Y(a)); c.lineTo(pl + w, Y(a)); c.stroke(); c.textAlign = 'right'; c.fillText(fmt(a, 0) + '°', pl - 6, Y(a)); });
+    c.textAlign = 'center'; for (let t = Math.ceil(t0); t <= t0 + span; t += 2) c.fillText(t + 's', X(t), pt + h + 13); c.textAlign = 'left';
+    if (SW.ghost) {
+      c.strokeStyle = C.muted; c.globalAlpha = 0.55; c.setLineDash([4, 4]); c.lineWidth = 1.6; c.beginPath();
+      let st = false; SW.ghost.samples.forEach(p => { if (p.t < t0 || p.t > t0 + span) return; const x = X(p.t), y = Y(p.a); st ? c.lineTo(x, y) : (c.moveTo(x, y), st = true); }); c.stroke();
+      c.setLineDash([]); c.globalAlpha = 1;
+    }
+    if (!sm.length) { c.fillStyle = C.muted; c.textAlign = 'center'; c.fillText('Press Release to record a graph', pl + w / 2, pt + h / 2 - 14); c.textAlign = 'left'; return; }
+    c.strokeStyle = C.accent; c.lineWidth = 2.4; c.lineJoin = 'round'; c.beginPath();
+    let st = false; sm.forEach(p => { if (p.t < t0) return; const x = X(p.t), y = Y(p.a); st ? c.lineTo(x, y) : (c.moveTo(x, y), st = true); }); c.stroke();
+    // bracket showing the last measured period
+    const n = SW.cross.length;
+    if (n >= 2 && SW.cross[n - 2] >= t0) {
+      const a = X(SW.cross[n - 2]), b = X(SW.cross[n - 1]), y = pt + 8;
+      c.strokeStyle = C.ke; c.fillStyle = C.ke; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(a, y + 6); c.lineTo(a, y); c.lineTo(b, y); c.lineTo(b, y + 6); c.stroke();
+      c.textAlign = 'center'; c.fillText(`T = ${fmt(SW.periods[SW.periods.length - 1], 2)} s`, (a + b) / 2, y + 14); c.textAlign = 'left';
+    }
+  }
+
+  /* ----- UI ----- */
+  let barEls = [];
+  function buildBars() {
+    const box = $('#pn-bars');
+    if (S.mode === 'swing') {
+      const defs = [['pe', 'Height', 'potential (PE)', 'var(--pe)'], ['ke', 'Motion', 'kinetic (KE)', 'var(--ke)'], ['heat', 'Heat', 'lost to air', 'var(--heat)']];
+      box.className = 'bars';
+      box.innerHTML = defs.map(([k, l, s, col]) => `<div class="bar-row"><div class="bl">${l}<small>${s}</small></div><div class="track"><div class="fill" style="background:${col}"></div></div><div class="bv">0 J</div></div>`).join('');
+      barEls = $$('.bar-row', box).map((row, i) => ({ k: defs[i][0], fill: $('.fill', row), val: $('.bv', row) }));
+      $('#pn-legend').innerHTML = '<span><i style="background:var(--accent)"></i>This run</span><span><i style="background:var(--muted)"></i>Last run (dashed)</span><span><i style="background:var(--ke)"></i>Measured period</span>';
+      $('#pn-bars-title').textContent = 'Energy right now'; $('#pn-bars-sub').textContent = 'bars share one scale';
+      $('#pn-graph-title').textContent = 'Angle over time'; $('#pn-graph-sub').textContent = 'degrees vs seconds';
+      $('#pn-total-l').textContent = 'Total energy';
+    } else {
+      const set = waveSet(), Lm = set[0].L;
+      box.className = 'bars compact';
+      box.innerHTML = set.map((p, k) => { const col = mix([142, 107, 255], [255, 176, 46], k / Math.max(1, set.length - 1)); return `<div class="bar-row"><div class="bl">#${k + 1}<small>${p.n} swings</small></div><div class="track"><div class="fill" style="width:${p.L / Lm * 100}%;background:rgb(${col.join(',')})"></div></div><div class="bv">${fmt(p.L, 2)} m</div></div>`; }).join('');
+      barEls = [];
+      $('#pn-legend').innerHTML = '<span><i style="background:var(--accent)"></i>T = 2π√(L/g)</span><span><i style="background:var(--pe)"></i>Each pendulum</span>';
+      $('#pn-bars-title').textContent = 'String lengths'; $('#pn-bars-sub').textContent = `swings in ${fmt(WV.Tc, 0)} s`;
+      $('#pn-graph-title').textContent = 'Period vs length'; $('#pn-graph-sub').textContent = 'longer string, slower swing';
+      $('#pn-total-l').textContent = 'Pattern repeats every';
+    }
+  }
+  const ro = $$('#pn-readouts .ro').map(el => ({ l: $('.ro-l', el), v: $('.ro-v', el) }));
+  const setRO = (i, label, val, unit) => { if (ro[i].l.textContent !== label) ro[i].l.textContent = label; ro[i].v.innerHTML = `${val}<small>${unit}</small>`; };
+  function updateUI() {
+    if (S.mode === 'swing') {
+      const e = energies(), E0 = e.E0 || 1;
+      barEls.forEach(b => { const v = e[b.k] || 0; b.fill.style.width = clamp(v / E0 * 100, 0, 100) + '%'; b.val.textContent = fmtE(v); });
+      $('#pn-total').textContent = fmtE(e.E0) + (SW.phase === 'ready' ? '' : '  (stays the same)');
+      setRO(0, 'Angle', fmt(Math.abs(SW.th) / DEG, 1), '°');
+      setRO(1, 'Speed', fmt(Math.abs(S.L * SW.w), 2), 'm/s');
+      setRO(2, 'Swings counted', String(SW.periods.length), '');
+      setRO(3, 'Measured period', SW.periods.length ? fmt(SW.periods[SW.periods.length - 1], 2) : '–', 's');
+    } else {
+      const set = waveSet();
+      $('#pn-total').textContent = fmt(WV.Tc, 0) + ' s';
+      setRO(0, 'Time', fmt(WV.t, 1), 's');
+      setRO(1, 'Lines up again in', fmt(WV.Tc - (WV.t % WV.Tc), 1), 's');
+      setRO(2, 'Longest string', fmt(set[0].L, 2), 'm');
+      setRO(3, 'Shortest string', fmt(set[set.length - 1].L, 2), 'm');
+    }
+    const ph = S.mode === 'swing' ? SW.phase : WV.phase;
+    const want = S.mode === 'swing' ? (ph === 'ready' ? 'Release' : 'Release again') : (ph === 'ready' ? 'Start' : 'Start again');
+    const lab = $('#pn-act-label'); if (lab.textContent !== want) lab.textContent = want;
+    if (ph !== 'ready') $('#pn-hint').hidden = true;
+  }
+  function updateEq() {
+    const gg = g();
+    $('#pn-g-out').textContent = `g = ${fmt(gg, 2)} m/s²`;
+    let html;
+    if (S.mode === 'swing') {
+      const T = Tsimple(), vmax = Math.sqrt(2 * gg * S.L * (1 - Math.cos(S.a0 * DEG)));
+      html = `<div class="line">T = 2π × √(L ÷ g) = 2π × √(${fmt(S.L, 2)} ÷ ${fmt(gg, 2)}) = <b class="acc">${fmt(T, 2)} s</b></div>
+        <div class="line">Fastest at the bottom: v = √(2 × g × L × (1 − cos ${fmt(S.a0, 0)}°)) = <b class="ke">${fmt(vmax, 2)} m/s</b></div>
+        <p class="note">${S.a0 > 20 ? `At ${fmt(S.a0, 0)}° the simple formula is a little off: big swings take slightly longer, about ${fmt(Tbig(S.a0), 2)} s here. The stopwatch shows the real value.` : 'For small swings like this, the formula is very accurate.'} The mass isn't in the formula, so ${fmt(S.m, 1)} kg or 5 kg makes no difference.${S.L * 4 <= 3 ? ` Try ${fmt(S.L * 4, 2)} m (4 × longer): the period should double to ${fmt(T * 2, 2)} s.` : ''}</p>`;
+    } else {
+      const set = waveSet(), a = set[0], b = set[set.length - 1];
+      html = `<div class="line">Longest: ${a.n} swings in ${fmt(WV.Tc, 0)} s → T = ${fmt(a.T, 2)} s → L = g × (T ÷ 2π)² = <b class="acc">${fmt(a.L, 2)} m</b></div>
+        <div class="line">Shortest: ${b.n} swings in ${fmt(WV.Tc, 0)} s → T = ${fmt(b.T, 2)} s → L = <b class="ke">${fmt(b.L, 2)} m</b></div>
+        <p class="note">Each pendulum makes exactly one more swing than its neighbour in ${fmt(WV.Tc, 0)} s. They drift out of step, make snakes and waves, split into two groups at ${fmt(WV.Tc / 2, 0)} s, then all line up again.</p>`;
+    }
+    $('#pn-eq').innerHTML = html;
+  }
+
+  /* ----- loop ----- */
+  function targetView() { return Math.max(1.2, S.L * 1.15); }
+  function drawAll() {
+    if (!W || !H) return;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    if (S.mode === 'swing') drawSwing(); else drawWave();
+    drawGraph(); updateUI();
+  }
+  function frame(ts) {
+    raf = requestAnimationFrame(frame);
+    let dt = last ? (ts - last) / 1000 : 0; last = ts; dt = clamp(dt, 0, 0.05);
+    tVis += dt;
+    if (S.mode === 'swing') {
+      acc += dt * S.speed; let n = 0;
+      while (acc >= STEP && n < 400) { stepSwing(STEP); acc -= STEP; n++; }
+      if (n >= 400) acc = 0;
+      if (!S.dragging) S.view += (targetView() - S.view) * Math.min(1, dt * 5);
+    } else stepWave(dt * S.speed);
+    drawAll();
+  }
+  function start() { if (running) return; running = true; last = 0; fit(); readColors(); S.view = targetView(); drawAll(); raf = requestAnimationFrame(frame); }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  /* ----- controls ----- */
+  function resetMode(keepStatus) {
+    if (S.mode === 'swing') swingReset(); else { WV.t = 0; WV.phase = 'ready'; WV.said = 0; buildBars(); }
+    if (!keepStatus) status(S.mode === 'swing' ? 'Ready. The bob is held at the start angle.' : 'Ready. All the pendulums are pulled back together.');
+    updateEq();
+  }
+  function act() { getAudio(); if (S.mode === 'swing') swingStart(); else waveStart(); }
+  $('#pn-act').addEventListener('click', act);
+  $('#pn-reset').addEventListener('click', () => resetMode());
+  const rL = bindControl('pn-L', 'm', 2, v => { S.L = v; resetMode(); }, status);
+  bindControl('pn-m', 'kg', 1, v => { S.m = v; resetMode(); }, status);
+  const rA = bindControl('pn-a', '°', 0, v => { S.a0 = v; resetMode(); }, status);
+  bindControl('pn-n', '', 0, v => { WV.N = Math.round(v); resetMode(); }, status);
+  bindControl('pn-tc', 's', 0, v => { WV.Tc = v; resetMode(); }, status);
+  bindControl('pn-wa', '°', 0, v => { WV.a0 = v; resetMode(); }, status);
+  $$('input[name="pn-planet"]').forEach(r => r.addEventListener('change', () => { S.planet = r.value; resetMode(); }));
+  $$('input[name="pn-speed"]').forEach(r => r.addEventListener('change', () => { S.speed = parseFloat(r.value); }));
+  $('#pn-air').addEventListener('change', e => { S.air = e.target.checked; });
+  $('#pn-trail').addEventListener('change', e => { S.trail = e.target.checked; });
+  $('#pn-arrow').addEventListener('change', e => { S.arrow = e.target.checked; });
+  $('#pn-sound').addEventListener('change', e => { S.sound = e.target.checked; });
+
+  function setMode(m) {
+    S.mode = m;
+    $$('.tabs [role=tab]', root).forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+    $('#pn-ctl-swing').hidden = m !== 'swing'; $('#pn-ctl-wave').hidden = m !== 'wave';
+    $('#pn-air-row').hidden = m !== 'swing';
+    $('#pn-lab-sub').textContent = m === 'swing'
+      ? 'Pull the bob to the side and let go. A stopwatch measures each period so you can test the formula.'
+      : 'Pendulums of slightly different lengths, released together. Because each length has its own period, they make waves and patterns.';
+    $('#pn-hint').textContent = m === 'swing' ? 'Drag the bob to set its length and angle, then let go' : 'Press Start and watch the view from above';
+    $('#pn-hint').hidden = false;
+    cv.setAttribute('aria-label', m === 'swing' ? 'Simulation of a swinging pendulum. Press Space to release, arrow keys to change the length.' : 'Simulation of a row of pendulums making a wave pattern. Press Space to start.');
+    buildBars(); resetMode();
+  }
+  $$('.tabs [role=tab]', root).forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  /* drag the bob: sets angle and length, and letting go releases it */
+  const ptr = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  cv.addEventListener('pointerdown', e => {
+    if (S.mode !== 'swing' || !geom) return;
+    const p = ptr(e), { px, py, s, r } = geom;
+    const bx = px + Math.sin(SW.th) * S.L * s, by = py + Math.cos(SW.th) * S.L * s;
+    if (Math.hypot(p.x - bx, p.y - by) > r + 24) return;
+    S.dragging = true; cv.setPointerCapture(e.pointerId); cv.classList.add('dragging'); $('#pn-hint').hidden = true;
+    swingReset(); SW.phase = 'ready';
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!S.dragging) return;
+    const p = ptr(e), { px, py, s } = geom, dx = p.x - px, dy = Math.max(1, p.y - py);
+    const ang = clamp(Math.round(Math.abs(Math.atan2(dx, dy)) / DEG), 5, 80);
+    const L = clamp(Math.round(Math.hypot(dx, dy) / s * 20) / 20, 0.1, 3);
+    S.side = dx < 0 ? -1 : 1;
+    if (ang !== S.a0 || L !== S.L) { S.a0 = ang; S.L = L; rA.sync(ang); rL.sync(L); updateEq(); }
+    SW.th = S.side * S.a0 * DEG; SW.w = 0;
+  });
+  const endDrag = () => { if (!S.dragging) return; S.dragging = false; cv.classList.remove('dragging'); getAudio(); swingStart(); };
+  cv.addEventListener('pointerup', endDrag); cv.addEventListener('pointercancel', endDrag);
+  cv.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); act(); }
+    else if (S.mode === 'swing' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { e.preventDefault(); S.L = clamp(Math.round((S.L + (e.key === 'ArrowDown' ? 0.05 : -0.05)) * 100) / 100, 0.1, 3); rL.sync(S.L); resetMode(); }
+  });
+
+  buildQuiz($('#pn-quiz'), $('#pn-quiz-score'), 'pn', [
+    { q: 'Which change makes a pendulum swing more slowly (a longer period)?', o: ['A heavier bob', 'A longer string', 'A smaller push', 'A lighter bob'], a: 1, hint: 'which letter is in the formula T = 2π√(L/g)?', why: 'Only length and gravity are in the formula. A longer string means a longer period.' },
+    { q: 'You make the string 4 times longer. The period becomes…', o: ['4 times longer', '2 times longer', 'the same', 'half as long'], a: 1, hint: 'the length is inside a square root.', why: 'T depends on √L, and √4 = 2. So 4 times the length gives 2 times the period.' },
+    { q: 'Two pendulums have the same length. One bob is 1 kg, the other 5 kg. Which takes longer for each swing?', o: ['The 1 kg bob', 'The 5 kg bob', 'They take the same time'], a: 2, hint: 'is mass in the formula?', why: 'Mass is not in the formula. Gravity pulls harder on the heavy bob, but it is also harder to speed up, so they swing in step.' },
+    { q: 'A pendulum clock is taken to the Moon, where gravity is weaker. The clock will run…', o: ['fast', 'slow', 'exactly on time'], a: 1, hint: 'g is under the square root on the bottom of the fraction.', why: 'Smaller g means a longer period. Each tick takes longer, so the clock runs slow: about 2.5 times slower on the Moon.' },
+    { q: 'Where in its swing does the bob have the most kinetic energy?', o: ['At the highest point', 'At the bottom', 'Halfway up', 'It is the same everywhere'], a: 1, hint: 'where is it moving fastest?', why: 'At the bottom all the height energy has become motion energy, so it moves fastest there.' }
+  ]);
+
+  buildBars(); swingReset(); updateEq();
   return { start, stop };
 }
 })();
