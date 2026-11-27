@@ -12,7 +12,7 @@
 :root{
   --bg:#EDF1F4; --grid:#E2E8ED; --panel:#FFFFFF; --panel-2:#F5F7F9; --ink:#14212C; --muted:#536577; --line:#D2DBE2;
   --accent:#1E4FCB; --accent-ink:#FFFFFF; --accent-soft:#E2E9FA;
-  --pe:#6A43D6; --pe-soft:#EDE7FC; --ke:#D67A00; --heat:#D2392E; --elastic:#1F8C4C;
+  --pe:#6A43D6; --pe-soft:#EDE7FC; --ke:#D67A00; --ke-soft:#FCEFD9; --ke-ink:#A55800; --heat:#D2392E; --elastic:#1F8C4C;
   --good:#1F8C4C; --good-soft:#E3F4EA; --bad:#C0352B; --bad-soft:#FBE7E5;
   --shadow:0 1px 2px rgba(20,33,44,.06), 0 8px 24px rgba(20,33,44,.06);
   --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
@@ -23,7 +23,7 @@
   :root:not([data-theme="light"]){
     --bg:#0D141B; --grid:#121B24; --panel:#141E28; --panel-2:#1A2632; --ink:#E3EBF2; --muted:#93A5B5; --line:#26343F;
     --accent:#86A6FF; --accent-ink:#0D141B; --accent-soft:#1C2A47;
-    --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
+    --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --ke-soft:#33260F; --ke-ink:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
     --good:#4CC77E; --good-soft:#15301F; --bad:#FF7A6E; --bad-soft:#3A1A18;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
     color-scheme:dark;
@@ -32,7 +32,7 @@
 :root[data-theme="dark"]{
   --bg:#0D141B; --grid:#121B24; --panel:#141E28; --panel-2:#1A2632; --ink:#E3EBF2; --muted:#93A5B5; --line:#26343F;
   --accent:#86A6FF; --accent-ink:#0D141B; --accent-soft:#1C2A47;
-  --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
+  --pe:#A88BFF; --pe-soft:#231C3D; --ke:#F5A623; --ke-soft:#33260F; --ke-ink:#F5A623; --heat:#FF6A5C; --elastic:#4CC77E;
   --good:#4CC77E; --good-soft:#15301F; --bad:#FF7A6E; --bad-soft:#3A1A18;
   --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
   color-scheme:dark;
@@ -111,7 +111,18 @@ a{color:var(--accent)}
 @keyframes mini-fall{0%,22%{transform:translateY(0)}70%{transform:translateY(150px)}100%{transform:translateY(150px)}}
 @keyframes mini-pe{0%,22%{transform:scaleX(1)}70%,100%{transform:scaleX(.02)}}
 @keyframes mini-ke{0%,22%{transform:scaleX(.02)}70%{transform:scaleX(1)}100%{transform:scaleX(1)}}
-@media (prefers-reduced-motion: reduce){.a-ball,.a-bar-pe,.a-bar-ke{animation:none}}
+.a-bar-pe,.a-bar-ke,.k-bar-ke,.k-bar-heat,.k-barrels{transform-box:fill-box}
+.k-car{animation:k-car 3.4s linear infinite}
+.k-lines{animation:k-lines 3.4s linear infinite}
+.k-barrels{transform-origin:100% 50%;animation:k-barrels 3.4s linear infinite}
+.k-bar-ke{transform-origin:0 50%;animation:k-bar-ke 3.4s linear infinite}
+.k-bar-heat{transform-origin:0 50%;animation:k-bar-heat 3.4s linear infinite}
+@keyframes k-car{0%,8%{transform:translateX(0)}50%{transform:translateX(92px)}60%{transform:translateX(118px)}100%{transform:translateX(118px)}}
+@keyframes k-lines{0%,8%{opacity:0}12%,48%{opacity:1}52%,100%{opacity:0}}
+@keyframes k-barrels{0%,50%{transform:scaleX(1)}60%,100%{transform:scaleX(.57)}}
+@keyframes k-bar-ke{0%,50%{transform:scaleX(1)}60%,100%{transform:scaleX(.02)}}
+@keyframes k-bar-heat{0%,50%{transform:scaleX(.02)}60%,100%{transform:scaleX(1)}}
+@media (prefers-reduced-motion: reduce){.a-ball,.a-bar-pe,.a-bar-ke,.k-car,.k-lines,.k-barrels,.k-bar-ke,.k-bar-heat{animation:none}}
 
 .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:44px 0 14px;flex-wrap:wrap}
 .section-head h2{font-size:1.5rem;font-weight:700}
@@ -135,10 +146,21 @@ a{color:var(--accent)}
 .c-head h1{font-size:clamp(2.4rem,5.6vw,4.2rem);font-weight:800;margin:10px 0 14px}
 .c-head .lead{font-size:1.15rem;max-width:58ch}
 .c-head .lead strong{color:var(--pe)}
+.c-head .lead strong.ke-strong{color:var(--ke-ink)}
+.link-chip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;padding:8px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.link-chip:hover{border-color:var(--accent)}
+.link-chip b{color:var(--accent)}
+.series-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:40px}
+.series-nav a{display:grid;gap:2px;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--ink);min-width:0}
+.series-nav a:hover{border-color:var(--accent)}
+.series-nav a small{font:600 11px/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.series-nav a b{font:700 1.1rem/1.2 var(--f-display)}
+.series-nav a.next{margin-left:auto;text-align:right}
 .formula-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);display:grid;gap:16px}
 .formula{font:700 clamp(2rem,4.4vw,3rem)/1 var(--f-display);display:flex;align-items:center;gap:.28em;flex-wrap:wrap}
 .formula .v{padding:.06em .24em;border-radius:.18em;background:var(--panel-2);border:1px solid var(--line)}
 .formula .v.pe{background:var(--pe-soft);color:var(--pe);border-color:transparent}
+.formula .v.ke{background:var(--ke-soft);color:var(--ke-ink);border-color:transparent}
 .formula .op{color:var(--muted);font-weight:500}
 .vars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .vars div{font-size:13.5px;color:var(--muted);line-height:1.35}
@@ -170,6 +192,7 @@ a{color:var(--accent)}
 .stage{position:relative;width:100%;aspect-ratio:16/10;max-width:100%;border-radius:16px;overflow:hidden;background:#5E9FE0;border:1px solid var(--line);box-shadow:var(--shadow);touch-action:none}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}
 .stage canvas.dragging{cursor:grabbing}
+#ke-stage{cursor:default}
 .stage-hint{position:absolute;left:12px;top:12px;font:600 12px/1.2 var(--f-mono);color:#fff;background:rgba(8,14,22,.55);padding:7px 9px;border-radius:8px;pointer-events:none;max-width:calc(100% - 24px)}
 .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .actions .btn{min-width:120px}
@@ -200,7 +223,9 @@ a{color:var(--accent)}
 .eq .line{font-family:var(--f-mono);font-size:14.5px;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
 .eq .line b{color:var(--pe)}
 .eq .line b.el{color:var(--elastic)}
-.eq .line b.ke{color:var(--ke)}
+.eq .line b.ke{color:var(--ke-ink)}
+.eq .line b.heat{color:var(--heat)}
+.eq .line b.acc{color:var(--accent)}
 .eq .note{color:var(--muted);font-size:14px}
 
 /* controls */
@@ -299,11 +324,6 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
   .topbar nav a + a{display:none}
 }
 </style>
-<script>
-  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
@@ -326,6 +346,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
     <nav aria-label="Main">
       <a href="#">All concepts</a>
       <a href="#potential-energy">Potential energy</a>
+      <a href="#kinetic-energy">Kinetic energy</a>
     </nav>
   </header>
 
@@ -533,7 +554,171 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
         <div class="ex"><span class="kind" style="color:var(--elastic)">Elastic</span><h3>A drawn bow</h3><p>Pulling the string bends the bow. Let go, and the stored energy launches the arrow.</p></div>
         <div class="ex"><span class="kind" style="color:var(--muted)">Chemical</span><h3>Food and batteries</h3><p>Energy is stored in chemical bonds and released when your body digests food or a battery powers a phone.</p></div>
       </div>
+      <nav class="series-nav" aria-label="More concepts"><a class="next" href="#kinetic-energy"><small>Next concept</small><b>Kinetic Energy →</b></a></nav>
       <footer class="foot"><span>Variable Lab · Potential Energy</span><span>Physics in the simulation uses real values of g for each planet.</span></footer>
+    </article>
+    <!-- ---------- KINETIC ENERGY ---------- -->
+    <article data-concept="kinetic-energy" hidden>
+      <section class="c-head">
+        <div>
+          <span class="eyebrow">Physics · Energy</span>
+          <h1>Kinetic Energy</h1>
+          <p class="lead"><strong class="ke-strong">Kinetic energy is the energy of motion.</strong> Anything that moves has it: a rolling ball, a running dog, a speeding car, even the wind. The heavier something is and, above all, the <em>faster</em> it goes, the more kinetic energy it carries, and the harder it is to stop.</p>
+          <a class="link-chip" href="#potential-energy">Connects to <b>Potential Energy</b>: a falling ball turns stored energy into kinetic energy.</a>
+        </div>
+        <div class="formula-card" aria-label="Kinetic energy formula">
+          <span class="eyebrow">Kinetic energy</span>
+          <div class="formula"><span class="v ke">KE</span><span class="op">=</span><span class="v">½</span><span class="op">×</span><span class="v">m</span><span class="op">×</span><span class="v">v²</span></div>
+          <div class="vars">
+            <div><b>m</b>mass of the object, in kilograms (kg)</div>
+            <div><b>v</b>speed, in metres per second (m/s)</div>
+            <div><b>v²</b>speed × speed. This is why speed matters so much</div>
+          </div>
+          <div class="unit">The answer is in <b>joules (J)</b>. A 2 kg ball rolling at 1 m/s has 1 J. A small car at 50 km/h carries about 100,000 J.</div>
+        </div>
+      </section>
+
+      <div class="facts">
+        <div class="fact"><span class="eyebrow">Idea 1</span><h3>Speed counts twice</h3><p>Speed is squared. Go 2 times faster and you carry 4 times the energy. Go 3 times faster and it's 9 times.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 2</span><h3>Mass counts once</h3><p>A van twice as heavy as a car, at the same speed, carries twice the energy. Only twice, not four times.</p></div>
+        <div class="fact"><span class="eyebrow">Idea 3</span><h3>Stopping means moving the energy</h3><p>To stop, all that energy has to go somewhere: heat in the brakes, or squashed metal in a crash. More energy means a longer stop or a bigger dent.</p></div>
+      </div>
+      <div class="types">
+        <span class="label">Kinds of kinetic energy:</span>
+        <span class="type"><i style="background:var(--ke)"></i>Moving along <small>a car, a thrown ball</small></span>
+        <span class="type"><i style="background:var(--accent)"></i>Spinning <small>wheels, fans, a spinning top</small></span>
+        <span class="type"><i style="background:var(--heat)"></i>Thermal <small>jiggling particles, felt as heat</small></span>
+      </div>
+
+      <!-- LAB -->
+      <section class="lab-wrap" id="ke-lab" aria-labelledby="ke-lab-title">
+        <div class="lab-title">
+          <div>
+            <span class="eyebrow">Interactive lab</span>
+            <h2 id="ke-lab-title">Try it yourself</h2>
+            <p id="ke-lab-sub">Choose the car's mass and speed, then crash it into a row of water barrels. The faster it goes, the deeper the barrels squash.</p>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Experiment">
+            <button role="tab" id="ke-tab-crash" aria-selected="true" data-mode="crash">Crash test</button>
+            <button role="tab" id="ke-tab-brake" aria-selected="false" data-mode="brake">Braking distance</button>
+          </div>
+        </div>
+
+        <div class="lab">
+          <div class="lab-stage">
+            <div class="stage" id="ke-stage-box">
+              <canvas id="ke-stage" tabindex="0" role="img" aria-label="Simulation of a car crashing into crash barrels. Press Space to start, arrow keys to change speed."></canvas>
+              <div class="stage-hint" id="ke-hint">Set the speed and mass, then press Crash</div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="ke-act" type="button">
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>
+                <span id="ke-act-label">Crash</span>
+              </button>
+              <button class="btn ghost" id="ke-reset" type="button">Reset</button>
+              <p class="status" id="ke-status" aria-live="polite">Ready. The car is waiting at the start line.</p>
+            </div>
+            <div class="readouts" id="ke-readouts">
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+              <div class="ro"><div class="ro-l"></div><div class="ro-v"></div></div>
+            </div>
+          </div>
+
+          <aside class="controls" aria-label="Experiment controls">
+            <p class="type-tip"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="3.5" width="13" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 8h1M7 8h1M10 8h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Drag a slider, or click a number and type an exact value.</p>
+            <div class="ctl">
+              <div class="ctl-h"><label for="ke-m">Mass (m)</label><output id="ke-m-out" for="ke-m">1500 kg</output></div>
+              <input type="range" id="ke-m" min="500" max="3500" step="50" value="1500">
+              <small class="help">A small car is about 1000 kg, a van about 3000 kg.</small>
+            </div>
+            <div class="ctl">
+              <div class="ctl-h"><label for="ke-v">Speed (v)</label><output id="ke-v-out" for="ke-v">20.0 m/s</output></div>
+              <input type="range" id="ke-v" min="1" max="40" step="0.5" value="20">
+              <small class="help" id="ke-v-help">= 72 km/h</small>
+            </div>
+
+            <div id="ke-ctl-crash" class="ctl">
+              <div class="ctl-h"><label for="ke-f">Barrier strength (F)</label><output id="ke-f-out" for="ke-f">300 kN</output></div>
+              <input type="range" id="ke-f" min="100" max="600" step="10" value="300">
+              <small class="help">How hard the barrels push back while they squash. They are 2.5 m deep.</small>
+            </div>
+
+            <div id="ke-ctl-brake" class="ctl" style="gap:18px" hidden>
+              <div class="ctl">
+                <div class="ctl-h"><span class="lbl" id="ke-surf-l">Road surface</span><output id="ke-mu-out">grip μ = 0.8</output></div>
+                <div class="seg" role="radiogroup" aria-labelledby="ke-surf-l">
+                  <input type="radio" name="ke-surf" id="ke-sf-dry" value="dry" checked><label for="ke-sf-dry">Dry<small>0.8</small></label>
+                  <input type="radio" name="ke-surf" id="ke-sf-wet" value="wet"><label for="ke-sf-wet">Wet<small>0.5</small></label>
+                  <input type="radio" name="ke-surf" id="ke-sf-gravel" value="gravel"><label for="ke-sf-gravel">Gravel<small>0.4</small></label>
+                  <input type="radio" name="ke-surf" id="ke-sf-ice" value="ice"><label for="ke-sf-ice">Ice<small>0.1</small></label>
+                </div>
+                <small class="help">Grip (μ) is how strongly the tyres can push on the road while braking.</small>
+              </div>
+              <div class="ctl">
+                <div class="ctl-h"><label for="ke-tr">Reaction time</label><output id="ke-tr-out" for="ke-tr">1.0 s</output></div>
+                <input type="range" id="ke-tr" min="0" max="2" step="0.1" value="1">
+                <small class="help">Time before the driver presses the brake. Phones and tiredness make it longer.</small>
+              </div>
+            </div>
+
+            <div class="toggles">
+              <label class="tog">Show speed arrow <input type="checkbox" id="ke-arrow" checked></label>
+              <label class="tog">Show last run <input type="checkbox" id="ke-ghost" checked></label>
+              <label class="tog">Sound effects <input type="checkbox" id="ke-sound" checked></label>
+            </div>
+            <div class="ctl">
+              <div class="ctl-h"><span class="lbl" id="ke-speed-l">Playback speed</span></div>
+              <div class="seg three" role="radiogroup" aria-labelledby="ke-speed-l">
+                <input type="radio" name="ke-speed" id="ke-sp-fast" value="2"><label for="ke-sp-fast">Fast</label>
+                <input type="radio" name="ke-speed" id="ke-sp-norm" value="1" checked><label for="ke-sp-norm">Normal</label>
+                <input type="radio" name="ke-speed" id="ke-sp-slow" value="0.3"><label for="ke-sp-slow">Slow</label>
+              </div>
+            </div>
+          </aside>
+
+          <div class="lab-data">
+            <div class="eq" id="ke-eq" aria-live="polite"></div>
+            <div class="data-grid">
+              <div class="panel">
+                <h3>Energy right now <span>bars share one scale</span></h3>
+                <div class="bars" id="ke-bars"></div>
+                <div class="total"><span>Total energy</span><b id="ke-total">0 J</b></div>
+              </div>
+              <div class="panel">
+                <h3>Energy over time <span>joules vs seconds</span></h3>
+                <div class="graph-box"><canvas id="ke-graph" role="img" aria-label="Line graph of energy over time"></canvas></div>
+                <div class="legend" id="ke-legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGES + QUIZ -->
+      <section class="learn">
+        <div class="panel">
+          <h2>Lab challenges</h2>
+          <p class="sub">Each one ticks itself off when you do it in the lab above. <span class="ch-count" id="ke-ch-count">0 / 5</span></p>
+          <ul class="ch-list" id="ke-ch"></ul>
+        </div>
+        <div class="panel">
+          <h2>Check yourself</h2>
+          <p class="sub">Pick an answer to see the explanation. <span class="score" id="ke-quiz-score"></span></p>
+          <form id="ke-quiz"></form>
+        </div>
+      </section>
+
+      <div class="section-head"><h2>Where you meet kinetic energy</h2></div>
+      <div class="examples">
+        <div class="ex"><span class="kind" style="color:var(--ke-ink)">Moving air</span><h3>Wind turbines</h3><p>Wind is moving air with kinetic energy. The blades catch it and a generator turns it into electricity.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--ke-ink)">Road safety</span><h3>Speed limits near schools</h3><p>Dropping from 50 to 30 km/h cuts a car's kinetic energy by almost two thirds, so it stops much sooner.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--accent)">Spinning</span><h3>Electric car braking</h3><p>Electric cars use the motor as a generator when slowing down, turning kinetic energy back into battery charge.</p></div>
+        <div class="ex"><span class="kind" style="color:var(--heat)">Impact</span><h3>Meteor craters</h3><p>A rock about 50 m across, moving at over 10 km per second, blasted out Meteor Crater in Arizona, more than a kilometre wide.</p></div>
+      </div>
+      <nav class="series-nav" aria-label="More concepts"><a href="#potential-energy"><small>Previous concept</small><b>← Potential Energy</b></a></nav>
+      <footer class="foot"><span>Variable Lab · Kinetic Energy</span><span>Braking uses real grip values for each road surface.</span></footer>
     </article>
   </main>
 </div>
@@ -545,7 +730,9 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const fmt = (v, d = 1) => Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
-const fmtJ = (E) => { E = Math.max(0, E); if (E >= 10000) return fmt(E / 1000, 1) + ' kJ'; if (E >= 100) return fmt(E, 0) + ' J'; return fmt(E, 1) + ' J'; };
+const fmtJ = (E) => { E = Math.max(0, E); if (E >= 1e6) return fmt(E / 1e6, 2) + ' MJ'; if (E >= 10000) return fmt(E / 1000, 1) + ' kJ'; if (E >= 100) return fmt(E, 0) + ' J'; return fmt(E, 1) + ' J'; };
+const fmtE = (E) => { E = Math.max(0, E); if (E >= 1e6) return fmt(E / 1e6, 2) + ' MJ'; if (E >= 1e5) return fmt(E / 1e3, 0) + ' kJ'; if (E >= 1e4) return fmt(E / 1e3, 1) + ' kJ'; if (E >= 100) return fmt(E, 0) + ' J'; return fmt(E, 1) + ' J'; };
+const splitE = (E) => { const p = fmtE(E).split(' '); return [p[0], p[1]]; };
 const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
@@ -579,6 +766,23 @@ const ART = {
     <rect class="a-bar-pe" x="236" y="104" width="120" height="14" rx="4" fill="var(--pe)"/>
     <rect x="236" y="164" width="120" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
     <rect class="a-bar-ke" x="236" y="164" width="120" height="14" rx="4" fill="var(--ke)"/>
+  </svg>`,
+  ke: `<svg viewBox="0 0 380 260" role="img" aria-label="A car drives into crash barrels while its motion-energy bar empties into a heat bar">
+    <rect x="0" y="206" width="380" height="7" rx="2" fill="var(--ink)" opacity=".85"/>
+    <g font-family="JetBrains Mono, monospace" font-size="12" fill="var(--muted)"><text x="214" y="42">motion</text><text x="214" y="96">heat</text></g>
+    <rect x="214" y="50" width="140" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="k-bar-ke" x="214" y="50" width="140" height="14" rx="4" fill="var(--ke)"/>
+    <rect x="214" y="104" width="140" height="14" rx="4" fill="var(--panel)" stroke="var(--line)"/>
+    <rect class="k-bar-heat" x="214" y="104" width="140" height="14" rx="4" fill="var(--heat)"/>
+    <g class="k-barrels"><rect x="226" y="160" width="20" height="46" rx="4" fill="#F07A1A"/><rect x="248" y="160" width="20" height="46" rx="4" fill="#F07A1A"/><rect x="270" y="160" width="20" height="46" rx="4" fill="#F07A1A"/><rect x="226" y="172" width="64" height="5" fill="#fff" opacity=".9"/><rect x="226" y="186" width="64" height="5" fill="#fff" opacity=".9"/></g>
+    <g class="k-car">
+      <g class="k-lines" stroke="var(--ke)" stroke-width="3" stroke-linecap="round"><line x1="2" y1="168" x2="22" y2="168"/><line x1="8" y1="180" x2="24" y2="180"/><line x1="0" y1="192" x2="22" y2="192"/></g>
+      <path d="M52 172l12-18h46l16 18z" fill="var(--ke)"/>
+      <rect x="32" y="170" width="102" height="26" rx="7" fill="var(--ke)"/>
+      <path d="M68 170l6-12h16v12zM94 170v-12h14l11 12z" fill="var(--ink)" opacity=".75"/>
+      <circle cx="54" cy="198" r="10" fill="var(--ink)"/><circle cx="112" cy="198" r="10" fill="var(--ink)"/>
+      <circle cx="54" cy="198" r="4" fill="var(--panel)"/><circle cx="112" cy="198" r="4" fill="var(--panel)"/>
+    </g>
   </svg>`,
   pendulum: `<svg viewBox="0 0 64 64" aria-hidden="true"><line x1="10" y1="8" x2="54" y2="8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><line x1="32" y1="8" x2="46" y2="46" stroke="var(--muted)" stroke-width="2"/><circle cx="46" cy="47" r="7" fill="var(--accent)"/><path d="M18 46a16 16 0 0 0 28 0" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 3"/></svg>`,
   buoy: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="30" width="52" height="28" rx="4" fill="var(--accent-soft)"/><path d="M6 30q6.5-4 13 0t13 0 13 0 13 0" fill="none" stroke="var(--accent)" stroke-width="2"/><rect x="22" y="20" width="20" height="16" rx="3" fill="var(--ke)"/><circle cx="44" cy="52" r="4" fill="var(--muted)"/></svg>`,
@@ -894,7 +1098,11 @@ const CONCEPTS = [
   { id: 'potential-energy', title: 'Potential Energy', ready: true, art: 'pe',
     tags: ['Physics', 'Energy', 'Ages 11–16', '2 experiments'],
     blurb: 'Lift a ball, drop it, squash a spring. Change mass, height and gravity, and watch stored energy turn into motion, heat and sound.',
-    factory: () => createPE() },
+    factory: () => createPE(), soft: 'pe-soft' },
+  { id: 'kinetic-energy', title: 'Kinetic Energy', ready: true, art: 'ke',
+    tags: ['Physics', 'Energy', 'Ages 11–16', '2 experiments'],
+    blurb: 'Crash a car into barrels and race it to a red light. See why doubling your speed means four times the energy and four times the braking distance.',
+    factory: () => createKE(), soft: 'ke-soft' },
   { id: 'pendulum', title: 'Pendulums', ready: false, art: 'pendulum', blurb: 'Does a longer string swing slower? Does a heavier bob change anything?' },
   { id: 'buoyancy', title: 'Buoyancy & Density', ready: false, art: 'buoy', blurb: 'Why a steel ship floats but a steel nail sinks.' },
   { id: 'ohms-law', title: "Ohm's Law", ready: false, art: 'circuit', blurb: 'Turn up the voltage, add resistance, and watch the current change.' }
@@ -910,7 +1118,7 @@ function renderHub() {
         <p>${c.blurb}</p>
         <span class="btn">Open the lab <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-      <div class="feature-art">${ART[c.art]}</div>
+      <div class="feature-art" style="background:var(--${c.soft})">${ART[c.art]}</div>
     </a>`).join('<div style="height:16px"></div>');
   $('#soon').innerHTML = CONCEPTS.filter(c => !c.ready).map(c => `
     <div class="soon">${ART[c.art]}<h3>${c.title}</h3><p>${c.blurb}</p><div><span class="tag">Coming soon</span></div></div>`).join('');
@@ -1689,6 +1897,688 @@ function createPE() {
 
   /* ----- init ----- */
   buildBars(); dropReset(); springReset(); updateEq();
+  return { start, stop };
+}
+
+/* =====================================================================
+   SHARED HELPERS FOR NEW LABS
+   ===================================================================== */
+
+/* Slider + typed number box, kept in sync. onSet(value) applies the value. */
+function bindControl(id, unit, dec, onSet, say, factor = 1) {
+  const el = $('#' + id), out = $('#' + id + '-out');
+  const name = ($(`label[for="${id}"]`) || {}).textContent || id;
+  const lo = parseFloat(el.min), hi = parseFloat(el.max);
+  const wrap = document.createElement('span'); wrap.className = 'num';
+  const inp = document.createElement('input');
+  inp.type = 'number'; inp.id = id + '-num'; inp.inputMode = 'decimal'; inp.step = 'any';
+  inp.min = String(lo * factor); inp.max = String(hi * factor);
+  inp.setAttribute('aria-label', `${name}, type a value from ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}`);
+  inp.title = `Type a value from ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}`;
+  const u = document.createElement('span'); u.className = 'unit'; u.textContent = unit;
+  wrap.append(inp, u); out.replaceWith(wrap);
+  const round = v => { const p = Math.pow(10, dec); return Math.round(v * factor * p) / p / factor; };
+  const show = v => { inp.value = (v * factor).toFixed(dec); };
+  const flash = () => { wrap.classList.remove('flash'); void wrap.offsetWidth; wrap.classList.add('flash'); };
+  show(parseFloat(el.value));
+  el.addEventListener('input', () => { const v = parseFloat(el.value); show(v); onSet(v); });
+  inp.addEventListener('input', () => {
+    const v = parseFloat(inp.value) / factor;
+    if (!isFinite(v) || v < lo || v > hi) return;
+    const r = round(v); el.value = r; onSet(r);
+  });
+  const commit = () => {
+    const raw = parseFloat(inp.value) / factor;
+    if (!isFinite(raw)) { show(parseFloat(el.value)); flash(); return; }
+    const v = round(clamp(raw, lo, hi));
+    el.value = v; show(v); onSet(v);
+    if (v !== round(raw)) { flash(); say(`${name} can be ${fmt(lo * factor, dec)} to ${fmt(hi * factor, dec)} ${unit}, so it was set to ${fmt(v * factor, dec)} ${unit}.`); }
+  };
+  inp.addEventListener('change', commit);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); commit(); inp.select(); } });
+  inp.addEventListener('focus', () => inp.select());
+  return { sync: v => { el.value = v; show(v); } };
+}
+
+/* Multiple-choice quiz with instant feedback. */
+function buildQuiz(form, scoreEl, prefix, QUIZ) {
+  const answered = {};
+  form.innerHTML = QUIZ.map((it, i) => `
+    <fieldset class="q" id="${prefix}-q${i}">
+      <legend><span>Q${i + 1}</span>${it.q}</legend>
+      <div class="opts">${it.o.map((o, j) => `<div class="opt"><input type="radio" name="${prefix}-q${i}" id="${prefix}-q${i}-${j}" value="${j}"><label for="${prefix}-q${i}-${j}">${o}</label></div>`).join('')}</div>
+      <div class="fb" hidden></div>
+    </fieldset>`).join('');
+  form.addEventListener('submit', e => e.preventDefault());
+  form.addEventListener('change', e => {
+    const m = e.target.name.match(new RegExp('^' + prefix + '-q(\\d+)$')); if (!m) return;
+    const i = +m[1], it = QUIZ[i], j = +e.target.value, fs = $('#' + prefix + '-q' + i), ok = j === it.a;
+    if (!(i in answered)) answered[i] = ok;
+    $$('.opt', fs).forEach((o, k) => { o.classList.toggle('right', ok && k === it.a); o.classList.toggle('wrong', !ok && k === j); });
+    const fb = $('.fb', fs); fb.hidden = false; fb.className = 'fb ' + (ok ? 'right' : 'wrong');
+    fb.innerHTML = ok ? `<b>Correct.</b> ${it.why}` : `<b>Not quite.</b> Have another go. Hint: ${it.hint}`;
+    const n = Object.keys(answered).length, right = Object.values(answered).filter(Boolean).length;
+    scoreEl.textContent = `${right} of ${n} right first time${n === QUIZ.length ? ' · all answered' : ''}`;
+  });
+}
+
+/* Challenge list that ticks itself off and remembers progress in this browser. */
+function makeChallenges(listEl, countEl, key, CH, say) {
+  const done = new Set(store.get(key, []));
+  const render = () => {
+    listEl.innerHTML = CH.map(c => `<li class="${done.has(c.id) ? 'done' : ''}"><span class="ck" aria-hidden="true"></span><span>${c.text}<span style="position:absolute;left:-9999px">${done.has(c.id) ? ' (done)' : ''}</span></span></li>`).join('');
+    countEl.textContent = `${done.size} / ${CH.length} done`;
+  };
+  render();
+  return id => {
+    if (done.has(id)) return;
+    done.add(id); store.set(key, [...done]); render();
+    const c = CH.find(x => x.id === id);
+    setTimeout(() => say('Challenge complete: ' + c.text.split('.')[0].split('?')[0] + '.'), 0);
+  };
+}
+
+/* =====================================================================
+   KINETIC ENERGY LAB
+   ===================================================================== */
+function createKE() {
+  const root = $('[data-concept="kinetic-energy"]');
+  const cv = $('#ke-stage'), ctx = cv.getContext('2d');
+  const gcv = $('#ke-graph'), gctx = gcv.getContext('2d');
+  let W = 0, H = 0, DPR = 1, GW = 0, GH = 0, raf = 0, last = 0, acc = 0, tVis = 0, running = false;
+  const STEP = 1 / 1000, G = 9.81, DEPTH = 2.5, CAR = 4.2, CROSS = 30, WHEEL_R = 0.33;
+
+  const SURF = {
+    dry:    { name: 'dry road', mu: 0.8, road: '#4A4F57', mark: 'rgba(15,17,20,.85)', sky: ['#5A9BDA', '#CFE7F7'] },
+    wet:    { name: 'wet road', mu: 0.5, road: '#39424E', mark: 'rgba(10,12,16,.7)', sky: ['#7F93A6', '#C9D3DC'] },
+    gravel: { name: 'gravel', mu: 0.4, road: '#9C8C72', mark: 'rgba(80,66,48,.85)', sky: ['#6FA6D8', '#DCEBF5'] },
+    ice:    { name: 'ice', mu: 0.1, road: '#C9DFEA', mark: 'rgba(120,150,170,.55)', sky: ['#9FB7CC', '#E7EFF5'] }
+  };
+  const S = { mode: 'crash', m: 1500, v: 20, F: 300, surface: 'dry', tr: 1.0, arrow: true, ghost: true, sound: true, speed: 1, shake: 0, particles: [] };
+  const CR = { x: -30, v: 0, v0: 0, phase: 'ready', E0: 0, t: 0, tHit: 0, crush: 0, vOut: 0, samples: [], sampT: 0, wheel: 0, through: false, last: null, lastDone: null };
+  const BR = { x: 0, v: 0, v0: 0, phase: 'ready', E0: 0, t: 0, brakeX: null, crossV: null, samples: [], sampT: 0, wheel: 0, last: null, lastDone: null };
+  const crashRuns = [], brakeRuns = [];
+
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const city = Array.from({ length: 30 }, (_, i) => ({ x: i * 44 + rnd() * 20, w: 26 + rnd() * 26, h: 0.18 + rnd() * 0.42, c: rnd() < 0.5 ? '#9FB6CB' : '#B3C6D7' }));
+  const clouds = Array.from({ length: 5 }, () => [rnd(), 0.06 + rnd() * 0.22, 0.6 + rnd() * 0.7, 5 + rnd() * 8]);
+  const drops = Array.from({ length: 90 }, () => [rnd(), rnd(), 0.6 + rnd() * 0.6]);
+  const wreck = Array.from({ length: 6 }, () => [rnd() * 3 + 2.6, (rnd() - 0.5) * 0.4, 0.3 + rnd() * 0.3]);
+
+  function fit() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.max(1, Math.round(W * DPR)); cv.height = Math.max(1, Math.round(H * DPR));
+    const g = gcv.getBoundingClientRect(); GW = g.width; GH = g.height;
+    gcv.width = Math.max(1, Math.round(GW * DPR)); gcv.height = Math.max(1, Math.round(GH * DPR));
+  }
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe($('#ke-stage-box'));
+  new ResizeObserver(() => { fit(); if (!running) drawAll(); }).observe(gcv.parentElement);
+
+  const statusEl = $('#ke-status');
+  const status = s => { statusEl.textContent = s; };
+
+  /* ----- sound ----- */
+  let noiseBuf = null, screech = null;
+  const audio = () => S.sound ? getAudio() : null;
+  function noise(a) {
+    if (noiseBuf) return noiseBuf;
+    const b = a.createBuffer(1, a.sampleRate, a.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    return (noiseBuf = b);
+  }
+  function crunch(E) {
+    const a = audio(); if (!a) return;
+    const t = a.currentTime, vol = clamp(0.06 + Math.log10(1 + E) / 14, 0.05, 0.5);
+    const o = a.createOscillator(), g1 = a.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(38, t + 0.35);
+    g1.gain.setValueAtTime(vol, t); g1.gain.exponentialRampToValueAtTime(0.0008, t + 0.4);
+    o.connect(g1).connect(a.destination); o.start(t); o.stop(t + 0.42);
+    const n = a.createBufferSource(), f = a.createBiquadFilter(), g2 = a.createGain();
+    n.buffer = noise(a); f.type = 'bandpass'; f.frequency.value = 900; f.Q.value = 0.8;
+    g2.gain.setValueAtTime(vol * 0.7, t); g2.gain.exponentialRampToValueAtTime(0.0008, t + 0.45);
+    n.connect(f).connect(g2).connect(a.destination); n.start(t); n.stop(t + 0.5);
+  }
+  function screechOn() {
+    const a = audio(); if (!a || screech) return;
+    const t = a.currentTime, src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    src.buffer = noise(a); src.loop = true;
+    f.type = 'bandpass'; f.frequency.value = S.surface === 'gravel' ? 600 : S.surface === 'ice' ? 3800 : 2600; f.Q.value = S.surface === 'gravel' ? 1.2 : 7;
+    const vol = S.surface === 'ice' ? 0.012 : S.surface === 'wet' ? 0.025 : 0.04;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.08);
+    src.connect(f).connect(g).connect(a.destination); src.start(t);
+    screech = { src, g };
+  }
+  function screechOff() {
+    if (!screech) return;
+    const a = getAudio(); const t = a.currentTime;
+    screech.g.gain.cancelScheduledValues(t); screech.g.gain.setValueAtTime(screech.g.gain.value, t); screech.g.gain.linearRampToValueAtTime(0, t + 0.15);
+    screech.src.stop(t + 0.2); screech = null;
+  }
+
+  /* ----- challenges ----- */
+  const complete = makeChallenges($('#ke-ch'), $('#ke-ch-count'), 'vl-ke-challenges', [
+    { id: 'double', text: 'Crash twice with the same mass, doubling the speed the second time. How much deeper do the barrels squash?' },
+    { id: 'mass2', text: 'Crash twice at the same speed, doubling the mass the second time. Compare the squash depth.' },
+    { id: 'through', text: 'Find a speed and mass that smash right through the barrels.' },
+    { id: 'ice', text: 'Brake at the same speed on a dry road and on ice. How many times longer is the stop on ice?' },
+    { id: 'crossing', text: 'On a wet road with a 1 s reaction time, stop before the crossing from 12 m/s (43 km/h) or faster.' }
+  ], m => { statusEl.textContent = statusEl.textContent.replace(/ ✓ Challenge complete.*$/, '') + ' ✓ ' + m; });
+
+  /* ----- energies ----- */
+  const st = () => S.mode === 'crash' ? CR : BR;
+  function energies() {
+    const s = st(), v = s.phase === 'ready' ? S.v : s.v;
+    const ke = 0.5 * S.m * v * v, E0 = s.phase === 'ready' ? ke : s.E0;
+    return { ke, heat: Math.max(0, E0 - ke), E0 };
+  }
+  function pushSample(arr, t) { const e = energies(); arr.push({ t, ke: e.ke, heat: e.heat }); if (arr.length > 2400) arr.shift(); }
+
+  /* ----- crash test ----- */
+  const startGap = () => clamp(S.v * 1.6, 6, 30);
+  function crashReset() {
+    CR.x = -startGap(); CR.v = 0; CR.phase = 'ready'; CR.t = 0; CR.crush = 0; CR.samples = []; CR.sampT = 0;
+    CR.through = false; CR.vOut = 0; CR.last = CR.lastDone; S.particles = [];
+  }
+  function crashStart() {
+    crashReset();
+    CR.v = CR.v0 = S.v; CR.E0 = 0.5 * S.m * S.v * S.v; CR.phase = 'driving';
+    pushSample(CR.samples, 0);
+    status(`Go! ${fmt(S.m, 0)} kg at ${fmt(S.v)} m/s (${fmt(S.v * 3.6, 0)} km/h) carries ${fmtE(CR.E0)} of kinetic energy.`);
+  }
+  function impact(E) {
+    const n = Math.round(clamp(6 + Math.sqrt(E) / 18, 6, 70) * (reduceMotion ? 0.4 : 1));
+    for (let i = 0; i < n; i++) S.particles.push({ x: 0.1, y: 0.3 + rnd() * 0.8, vx: (rnd() - 0.7) * 6, vy: 1 + rnd() * 5, life: 0.7 + rnd() * 0.8, age: 0, r: 2 + rnd() * 3, c: rnd() < 0.6 ? '#F07A1A' : '#FFFFFF' });
+    if (!reduceMotion) S.shake = Math.max(S.shake, clamp(Math.log10(1 + E) * 2.2 - 6, 1, 13));
+    crunch(E);
+  }
+  function burst() {
+    const n = reduceMotion ? 30 : 90;
+    for (let i = 0; i < n; i++) S.particles.push({ x: DEPTH * rnd(), y: 0.2 + rnd() * 1, vx: 2 + rnd() * 10, vy: 1 + rnd() * 6, life: 0.6 + rnd() * 1, age: 0, r: 1.5 + rnd() * 2.5, c: rnd() < 0.7 ? '#8CCBF5' : '#F07A1A' });
+    if (!reduceMotion) S.shake = Math.max(S.shake, 9);
+  }
+  function crashDone() {
+    pushSample(CR.samples, CR.t);
+    const prev = CR.last;
+    let msg;
+    if (CR.through) {
+      msg = `Smashed through! The barrels can soak up ${fmtE(S.F * 1000 * DEPTH)} (F × 2.5 m), but the car carried ${fmtE(CR.E0)}. It kept going at ${fmt(CR.vOut)} m/s.`;
+      complete('through');
+    } else {
+      msg = `Stopped in ${fmt(CR.t - CR.tHit, 2)} s. The barrels squashed ${fmt(CR.crush, 2)} m, turning all ${fmtE(CR.E0)} into heat, sound and crushed plastic.`;
+      if (prev && !prev.through && prev.crush > 0.001) msg += ` That's ${fmt(CR.crush / prev.crush, 1)}× the squash of the last run.`;
+    }
+    status(msg);
+    const run = { m: S.m, v: CR.v0, F: S.F };
+    if (crashRuns.some(r => Math.abs(r.m - run.m) < 1 && r.F === run.F && Math.abs(run.v / r.v - 2) < 0.05)) complete('double');
+    if (crashRuns.some(r => Math.abs(r.v - run.v) < 0.01 && r.F === run.F && Math.abs(run.m / r.m - 2) < 0.04)) complete('mass2');
+    crashRuns.push(run);
+    CR.lastDone = { crush: CR.crush, v: CR.v0, m: S.m, through: CR.through };
+  }
+  function stepCrash(dt) {
+    if (CR.phase === 'ready' || CR.phase === 'done') return;
+    const F = S.F * 1000;
+    CR.t += dt; CR.wheel += CR.v * dt / WHEEL_R;
+    if (CR.phase === 'driving') {
+      CR.x += CR.v * dt;
+      if (CR.x >= 0) { CR.x = 0; CR.phase = 'crushing'; CR.tHit = CR.t; impact(CR.E0); }
+    } else if (CR.phase === 'crushing') {
+      CR.v -= F / S.m * dt;
+      if (CR.v <= 0) { CR.v = 0; CR.phase = 'done'; crashDone(); return; }
+      CR.x += CR.v * dt; CR.crush = Math.max(CR.crush, CR.x);
+      if (CR.x >= DEPTH) { CR.crush = DEPTH; CR.through = true; CR.vOut = CR.v; CR.phase = 'through'; burst(); }
+    } else if (CR.phase === 'through') {
+      CR.x += CR.v * dt;
+      if (CR.x > DEPTH + 30) { CR.phase = 'done'; crashDone(); return; }
+    }
+    CR.sampT += dt; if (CR.sampT >= 1 / 60) { CR.sampT = 0; pushSample(CR.samples, CR.t); }
+  }
+
+  /* ----- braking distance ----- */
+  const mu = () => SURF[S.surface].mu;
+  const thinkD = () => S.v * S.tr, brakeD = () => S.v * S.v / (2 * mu() * G);
+  function brakeReset() { screechOff(); BR.x = 0; BR.v = 0; BR.phase = 'ready'; BR.t = 0; BR.brakeX = null; BR.crossV = null; BR.samples = []; BR.sampT = 0; BR.last = BR.lastDone; S.particles = []; }
+  function brakeStart() {
+    brakeReset();
+    BR.v = BR.v0 = S.v; BR.E0 = 0.5 * S.m * S.v * S.v;
+    if (S.tr > 0) { BR.phase = 'thinking'; status(`The light turns red! The driver needs ${fmt(S.tr)} s to react. The car keeps going at ${fmt(S.v)} m/s.`); }
+    else { BR.phase = 'braking'; BR.brakeX = 0; screechOn(); status('The light turns red and the driver brakes instantly.'); }
+    pushSample(BR.samples, 0);
+  }
+  function brakeDone() {
+    screechOff(); pushSample(BR.samples, BR.t);
+    const d = BR.x, think = BR.brakeX || 0, ok = BR.crossV === null;
+    status(ok
+      ? `Stopped after ${fmt(d)} m: ${fmt(think)} m thinking + ${fmt(d - think)} m braking. That's ${fmt(CROSS - d)} m before the crossing. All ${fmtE(BR.E0)} became heat in the brakes and tyres.`
+      : `Too late! The car reached the crossing still doing ${fmt(BR.crossV)} m/s (${fmt(BR.crossV * 3.6, 0)} km/h). It needed ${fmt(d)} m to stop.`);
+    const run = { v: BR.v0, surf: S.surface };
+    if (brakeRuns.some(r => Math.abs(r.v - run.v) < 0.01 && ((r.surf === 'ice' && run.surf === 'dry') || (r.surf === 'dry' && run.surf === 'ice')))) complete('ice');
+    if (ok && S.surface === 'wet' && S.tr >= 1 && BR.v0 >= 12) complete('crossing');
+    brakeRuns.push(run);
+    BR.lastDone = { d, v: BR.v0 };
+  }
+  function stepBrake(dt) {
+    if (BR.phase === 'ready' || BR.phase === 'done') return;
+    BR.t += dt; BR.wheel += BR.v * dt / WHEEL_R;
+    if (BR.phase === 'thinking') {
+      BR.x += BR.v * dt;
+      if (BR.t >= S.tr) { BR.phase = 'braking'; BR.brakeX = BR.x; screechOn(); }
+    } else {
+      BR.v -= mu() * G * dt;
+      if (BR.v <= 0) { BR.v = 0; BR.phase = 'done'; brakeDone(); return; }
+      BR.x += BR.v * dt;
+      if (rnd() < dt * 40 && S.surface !== 'ice') S.particles.push({ x: BR.x - CAR * 0.8, y: 0.05, vx: -1 - rnd() * 2, vy: 0.5 + rnd(), life: 0.6 + rnd() * 0.5, age: 0, r: 3 + rnd() * 4, c: S.surface === 'gravel' ? 'rgba(170,150,120,.6)' : 'rgba(220,220,225,.5)' });
+    }
+    if (BR.crossV === null && BR.x >= CROSS) BR.crossV = BR.v;
+    BR.sampT += dt; if (BR.sampT >= 1 / 40) { BR.sampT = 0; pushSample(BR.samples, BR.t); }
+  }
+
+  /* ----- drawing helpers ----- */
+  function roundRect(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function pill(text, x, y, align = 'left', bg = 'rgba(8,14,22,.66)', fg = '#fff') {
+    ctx.font = '600 12px "JetBrains Mono", ui-monospace, monospace';
+    const w = ctx.measureText(text).width + 14, h = 22;
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = clamp(x0, 4, W - w - 4);
+    const y0 = clamp(y - h / 2, 4, H - h - 4);
+    ctx.fillStyle = bg; roundRect(x0, y0, w, h, 6); ctx.fill();
+    ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, x0 + 7, y0 + h / 2 + 0.5);
+  }
+  function arrow(x1, y1, x2, y2, color, lw = 3) {
+    const a = Math.atan2(y2 - y1, x2 - x1), hl = 10;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * hl * 0.6, y2 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * hl, y2 - Math.sin(a - 0.45) * hl);
+    ctx.lineTo(x2 - Math.cos(a + 0.45) * hl, y2 - Math.sin(a + 0.45) * hl); ctx.closePath(); ctx.fill();
+  }
+  function niceStep(span, n = 6) {
+    const raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), k = raw / p;
+    return (k < 1.5 ? 1 : k < 3.5 ? 2 : k < 7.5 ? 5 : 10) * p;
+  }
+
+  function backdrop(sky, roadTop, camPx, weather) {
+    const g = ctx.createLinearGradient(0, 0, 0, roadTop);
+    g.addColorStop(0, sky[0]); g.addColorStop(1, sky[1]);
+    ctx.fillStyle = g; ctx.fillRect(-20, -20, W + 40, roadTop + 20);
+    if (!weather) {
+      const sx = W * 0.12, sy = H * 0.14, sg = ctx.createRadialGradient(sx, sy, 4, sx, sy, 60);
+      sg.addColorStop(0, 'rgba(255,248,214,.95)'); sg.addColorStop(1, 'rgba(255,240,190,0)');
+      ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 60, 0, 7); ctx.fill();
+      ctx.fillStyle = '#FFF6D6'; ctx.beginPath(); ctx.arc(sx, sy, 15, 0, 7); ctx.fill();
+    }
+    clouds.forEach(c => {
+      const x = ((c[0] * (W + 240) + tVis * c[3] - camPx * 0.05) % (W + 240) + W + 240) % (W + 240) - 120, y = c[1] * roadTop, s = c[2] * clamp(W / 700, 0.6, 1.2);
+      ctx.fillStyle = weather === 'wet' ? 'rgba(235,240,245,.7)' : 'rgba(255,255,255,.85)';
+      ctx.beginPath(); ctx.ellipse(x, y, 44 * s, 14 * s, 0, 0, 7); ctx.ellipse(x - 24 * s, y + 4 * s, 22 * s, 10 * s, 0, 0, 7); ctx.ellipse(x + 22 * s, y - 5 * s, 26 * s, 14 * s, 0, 0, 7); ctx.fill();
+    });
+    const P = 1320, base = roadTop - 4;
+    city.forEach(b => {
+      const x = ((b.x - camPx * 0.25) % P + P) % P - 60, h = b.h * roadTop;
+      ctx.fillStyle = b.c; ctx.fillRect(x, base - h, b.w, h + 4);
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
+      for (let yy = base - h + 6; yy < base - 8; yy += 10) for (let xx = x + 5; xx < x + b.w - 5; xx += 8) ctx.fillRect(xx, yy, 3, 4);
+    });
+    ctx.fillStyle = weather === 'ice' ? '#E9F1F6' : '#7FAE62';
+    ctx.beginPath(); ctx.moveTo(-10, roadTop);
+    for (let x = -10; x <= W + 10; x += 10) ctx.lineTo(x, roadTop - 10 - 6 * Math.sin((x + camPx * 0.5) * 0.02));
+    ctx.lineTo(W + 10, roadTop); ctx.closePath(); ctx.fill();
+  }
+  function road(roadTop, X, s, color, from, to) {
+    ctx.fillStyle = color; ctx.fillRect(-20, roadTop, W + 40, H - roadTop + 20);
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(-20, roadTop, W + 40, 4);
+    // roadside posts on the far edge every 6 m
+    for (let k = Math.floor(from / 6); k * 6 <= to; k++) {
+      const x = X(k * 6);
+      ctx.fillStyle = '#F4F4F4'; ctx.fillRect(x - 2, roadTop - 18, 4, 20);
+      ctx.fillStyle = '#E2472F'; ctx.fillRect(x - 2, roadTop - 16, 4, 4);
+    }
+    // lane dashes (2 m on, 2 m off) and curb blocks every 1 m
+    const yl = roadTop + (H - roadTop) * 0.8;
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    for (let k = Math.floor(from / 4); k * 4 <= to; k++) ctx.fillRect(X(k * 4), yl, Math.max(2, 2 * s), 3);
+    if (s > 4) for (let k = Math.floor(from); k <= to; k++) { ctx.fillStyle = k % 2 ? '#D8D8D8' : '#D8483A'; ctx.fillRect(X(k), H - 6, s + 1, 6); }
+  }
+  function drawCar(front, laneY, L, wheelAng, braking, keFrac, label, v) {
+    const x0 = front - L, h = L * 0.36, wr = L * 0.085, bodyB = laneY - wr * 0.85, bodyT = bodyB - h * 0.48, cabT = bodyT - h * 0.42;
+    // energy glow
+    if (keFrac > 0.03) {
+      const gx = x0 + L / 2, gy = (cabT + laneY) / 2, gr = L * 0.85;
+      const g = ctx.createRadialGradient(gx, gy, L * 0.2, gx, gy, gr);
+      g.addColorStop(0, `rgba(255,170,40,${0.42 * keFrac})`); g.addColorStop(1, 'rgba(255,170,40,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, gr, 0, 7); ctx.fill();
+    }
+    // speed lines
+    if (v > 1.5) {
+      ctx.strokeStyle = `rgba(255,255,255,${clamp(v / 40, 0.2, 0.75)})`; ctx.lineWidth = 2;
+      for (let i = 0; i < 4; i++) {
+        const y = cabT + (laneY - cabT) * (0.2 + i * 0.2), len = clamp(v * 2.2, 10, 90) * (1 - i * 0.12);
+        ctx.beginPath(); ctx.moveTo(x0 - 6, y); ctx.lineTo(x0 - 6 - len, y); ctx.stroke();
+      }
+    }
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(x0 + L / 2, laneY + 2, L * 0.5, Math.max(2, L * 0.03), 0, 0, 7); ctx.fill();
+    // body
+    const bg = ctx.createLinearGradient(0, cabT, 0, bodyB);
+    bg.addColorStop(0, '#FFC24D'); bg.addColorStop(1, '#D98A12');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.moveTo(x0 + L * 0.22, bodyT); ctx.lineTo(x0 + L * 0.34, cabT); ctx.lineTo(x0 + L * 0.66, cabT); ctx.lineTo(x0 + L * 0.8, bodyT); ctx.closePath(); ctx.fill();
+    roundRect(x0, bodyT, L, bodyB - bodyT, h * 0.16); ctx.fill();
+    ctx.strokeStyle = 'rgba(90,50,0,.55)'; ctx.lineWidth = 1.2; ctx.stroke();
+    // windows
+    ctx.fillStyle = '#24313D';
+    const wi = L * 0.02;
+    ctx.beginPath(); ctx.moveTo(x0 + L * 0.26, bodyT - 1); ctx.lineTo(x0 + L * 0.35 + wi, cabT + wi * 1.5); ctx.lineTo(x0 + L * 0.49, cabT + wi * 1.5); ctx.lineTo(x0 + L * 0.49, bodyT - 1); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x0 + L * 0.52, bodyT - 1); ctx.lineTo(x0 + L * 0.52, cabT + wi * 1.5); ctx.lineTo(x0 + L * 0.65 - wi, cabT + wi * 1.5); ctx.lineTo(x0 + L * 0.76, bodyT - 1); ctx.closePath(); ctx.fill();
+    // lights
+    ctx.fillStyle = '#FFF3C4'; ctx.fillRect(front - 3, bodyT + 3, 3, Math.max(3, h * 0.1));
+    ctx.fillStyle = braking ? '#FF2A1A' : '#9E1F14'; ctx.fillRect(x0, bodyT + 3, 3, Math.max(3, h * 0.1));
+    if (braking) {
+      const g = ctx.createRadialGradient(x0, bodyT + 5, 1, x0, bodyT + 5, 26);
+      g.addColorStop(0, 'rgba(255,40,20,.75)'); g.addColorStop(1, 'rgba(255,40,20,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x0, bodyT + 5, 26, 0, 7); ctx.fill();
+    }
+    // wheels
+    [x0 + L * 0.2, x0 + L * 0.8].forEach(wx => {
+      ctx.fillStyle = '#1B1F24'; ctx.beginPath(); ctx.arc(wx, laneY - wr, wr, 0, 7); ctx.fill();
+      ctx.fillStyle = '#A6B0BA'; ctx.beginPath(); ctx.arc(wx, laneY - wr, wr * 0.5, 0, 7); ctx.fill();
+      ctx.strokeStyle = '#59636D'; ctx.lineWidth = Math.max(1, wr * 0.14);
+      for (let k = 0; k < 3; k++) { const a = wheelAng + k * 2.094; ctx.beginPath(); ctx.moveTo(wx, laneY - wr); ctx.lineTo(wx + Math.cos(a) * wr * 0.5, laneY - wr + Math.sin(a) * wr * 0.5); ctx.stroke(); }
+    });
+    if (L > 60) { ctx.fillStyle = 'rgba(60,30,0,.75)'; ctx.font = `700 ${clamp(L * 0.07, 9, 13)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, x0 + L * 0.5, (bodyT + bodyB) / 2 + 1); ctx.textAlign = 'left'; }
+    return { top: cabT, mid: x0 + L / 2 };
+  }
+  function particles(dt, X, laneY, s) {
+    S.particles = S.particles.filter(p => (p.age += dt) < p.life);
+    S.particles.forEach(p => {
+      p.vy -= 9.81 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.y < 0) { p.y = 0; p.vy *= -0.3; p.vx *= 0.5; }
+      ctx.globalAlpha = 1 - p.age / p.life; ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.arc(X(p.x), laneY - p.y * s, p.r, 0, 7); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  /* ----- scene: crash ----- */
+  function drawCrash(dt) {
+    const s = clamp(W / 15, 18, 64), roadTop = Math.round(H * 0.62), laneY = Math.round(roadTop + (H - roadTop) * 0.5);
+    const settled = -(W * 0.62) / s;
+    const camL = Math.min(settled, CR.x - (W * 0.5) / s);
+    const X = wx => (wx - camL) * s;
+    backdrop(SURF.dry.sky, roadTop, camL * s, null);
+    road(roadTop, X, s, SURF.dry.road, camL - 2, camL + W / s + 2);
+    const e = energies(), E0 = e.E0 || 1;
+
+    // barrels
+    const bh = 1.05 * s, crush = CR.crush;
+    if (!CR.through) {
+      const bw = (DEPTH - crush) / 5 * s, q = (DEPTH - crush) / DEPTH;
+      for (let i = 0; i < 5; i++) {
+        const bx = X(crush) + i * bw;
+        ctx.fillStyle = '#F07A1A'; roundRect(bx + 1, laneY - bh, bw - 2, bh, Math.min(6, bw / 3)); ctx.fill();
+        ctx.fillStyle = '#FFFFFF'; ctx.fillRect(bx + 1, laneY - bh * 0.72, bw - 2, bh * 0.12); ctx.fillRect(bx + 1, laneY - bh * 0.42, bw - 2, bh * 0.12);
+        ctx.fillStyle = '#C45A0C'; ctx.fillRect(bx + 1, laneY - bh, bw - 2, bh * 0.08);
+        if (q < 0.92) { ctx.strokeStyle = 'rgba(90,40,0,.55)'; ctx.lineWidth = 1; for (let k = 1; k < 4; k++) { const xx = bx + bw * k / 4; ctx.beginPath(); ctx.moveTo(xx, laneY - bh + 4); ctx.lineTo(xx + (k % 2 ? 2 : -2), laneY - 3); ctx.stroke(); } }
+      }
+    } else {
+      wreck.forEach(w => { ctx.fillStyle = '#F07A1A'; ctx.beginPath(); ctx.ellipse(X(w[0]), laneY - 3 + w[1] * s * 0.2, w[2] * s, 4, 0, 0, 7); ctx.fill(); });
+      ctx.fillStyle = 'rgba(140,200,245,.35)'; ctx.beginPath(); ctx.ellipse(X(DEPTH / 2 + 1), laneY + 3, DEPTH * s, 6, 0, 0, 7); ctx.fill();
+    }
+    // depth ruler under the barrels
+    const ry = laneY + Math.min(16, (H - laneY) * 0.35);
+    ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(X(0), ry); ctx.lineTo(X(DEPTH), ry); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '600 10px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let d = 0; d <= DEPTH + 1e-6; d += 0.5) { ctx.fillRect(X(d) - 0.75, ry - 4, 1.5, 8); if (s * 0.5 > 22 || d === 0 || d === DEPTH) ctx.fillText(fmt(d, 1), X(d), ry + 5); }
+    ctx.textAlign = 'left';
+    // last run marker
+    if (S.ghost && CR.last && !CR.last.through && CR.last.crush > 0.005) {
+      const gx = X(CR.last.crush);
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = '#FFD166'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(gx, laneY - bh - 14); ctx.lineTo(gx, ry); ctx.stroke(); ctx.setLineDash([]);
+      pill(`last: ${fmt(CR.last.crush, 2)} m at ${fmt(CR.last.v)} m/s`, gx + 6, laneY - bh - 38, 'left', 'rgba(150,100,0,.9)');
+    }
+    if (crush > 0.004 && !CR.through) pill(`squashed ${fmt(crush, 2)} m`, X(crush + (DEPTH - crush) / 2), laneY - bh - 14, 'center', 'rgba(210,57,46,.92)');
+    particles(dt, X, laneY, s);
+    const L = CAR * s, front = X(CR.x);
+    const car = drawCar(front, laneY, L, CR.wheel, CR.phase === 'crushing', e.ke / E0, fmt(S.m, 0) + ' kg', CR.phase === 'ready' ? 0 : CR.v);
+    if (S.arrow && CR.v > 0.2) {
+      const len = clamp(CR.v * 4, 14, 170), y = car.top - 16;
+      arrow(car.mid - len / 2, y, car.mid + len / 2, y, '#FFB02E', 4);
+      pill(`v = ${fmt(CR.v)} m/s`, car.mid, y - 18, 'center', 'rgba(150,85,0,.9)');
+    }
+    if (CR.phase === 'ready') {
+      pill(`KE = ${fmtE(e.ke)}`, car.mid, car.top - 20, 'center', 'rgba(173,94,0,.95)');
+      if (X(0) > W - 30) pill(`barrels ${fmt(-CR.x, 0)} m ahead →`, W - 10, laneY - bh * 0.6, 'right');
+    }
+  }
+
+  /* ----- scene: braking ----- */
+  function drawBrake(dt) {
+    const sf = SURF[S.surface], pred = thinkD() + brakeD();
+    const camL = -CAR - 1.5, viewEnd = Math.max(pred, CROSS + 3, BR.x) + 5;
+    const s = Math.min((W - 8) / (viewEnd - camL), W / 15);
+    const roadTop = Math.round(H * 0.62), laneY = Math.round(roadTop + (H - roadTop) * 0.5);
+    const X = wx => (wx - camL) * s;
+    backdrop(sf.sky, roadTop, 0, S.surface === 'dry' || S.surface === 'gravel' ? null : S.surface);
+    road(roadTop, X, s, sf.road, camL - 1, camL + W / s + 1);
+    // surface texture
+    if (S.surface === 'ice') { ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 2; for (let i = 0; i < 14; i++) { const x = (i * 97 + 30) % W, y = roadTop + 8 + (i * 37) % (H - roadTop - 16); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 30, y - 3); ctx.stroke(); } }
+    if (S.surface === 'wet') { ctx.fillStyle = 'rgba(160,190,220,.18)'; for (let i = 0; i < 10; i++) { ctx.beginPath(); ctx.ellipse((i * 131 + 40) % W, roadTop + 10 + (i * 29) % (H - roadTop - 20), 30, 4, 0, 0, 7); ctx.fill(); } }
+    if (S.surface === 'gravel') { ctx.fillStyle = 'rgba(60,45,30,.35)'; for (let i = 0; i < 160; i++) { ctx.fillRect((i * 53.7) % W, roadTop + 6 + (i * 17.3) % (H - roadTop - 10), 2, 2); } }
+    // crossing + traffic light
+    ctx.fillStyle = 'rgba(255,255,255,.88)';
+    for (let k = 0; k < 6; k++) ctx.fillRect(X(CROSS + k * 0.5), roadTop + 4, Math.max(1.5, 0.28 * s), H - roadTop - 10);
+    const px = X(CROSS - 0.4), poleTop = roadTop - Math.max(58, 3.4 * s);
+    ctx.fillStyle = '#39424C'; ctx.fillRect(px - 2, poleTop, 4, roadTop - poleTop);
+    roundRect(px - 8, poleTop - 30, 16, 32, 4); ctx.fill();
+    const red = BR.phase !== 'ready';
+    [['#FF3B2F', red, 0], ['#2FD36B', !red, 1]].forEach(([c, on, i]) => {
+      const ly = poleTop - 22 + i * 15;
+      ctx.fillStyle = on ? c : 'rgba(255,255,255,.12)'; ctx.beginPath(); ctx.arc(px, ly, 5, 0, 7); ctx.fill();
+      if (on) { const g = ctx.createRadialGradient(px, ly, 2, px, ly, 18); g.addColorStop(0, c + 'AA'); g.addColorStop(1, c + '00'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, ly, 18, 0, 7); ctx.fill(); }
+    });
+    pill('crossing 30 m', px, poleTop - 46, 'center');
+    // start line
+    ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillRect(X(0) - 1.5, roadTop + 4, 3, H - roadTop - 10);
+    // distance ruler along the bottom
+    const step = niceStep(viewEnd, 7), ry = H - 18;
+    ctx.fillStyle = 'rgba(8,14,22,.55)'; ctx.fillRect(0, ry - 8, W, 26);
+    ctx.fillStyle = '#fff'; ctx.font = '600 10.5px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let d = 0; d <= viewEnd; d += step) { ctx.fillRect(X(d) - 0.75, ry - 8, 1.5, 6); ctx.fillText(fmt(d, step < 1 ? 1 : 0) + (d === 0 ? ' m' : ''), X(d), ry + 4); }
+    ctx.textAlign = 'left';
+    // skid marks
+    if (BR.brakeX !== null && BR.x > BR.brakeX) {
+      ctx.strokeStyle = sf.mark; ctx.lineWidth = 3; ctx.lineCap = 'butt';
+      [0.2, 0.8].forEach(o => { ctx.beginPath(); ctx.moveTo(X(BR.brakeX - CAR + CAR * o), laneY - 1); ctx.lineTo(X(BR.x - CAR + CAR * o), laneY - 1); ctx.stroke(); });
+    }
+    // predicted stop + last run
+    const markLine = (d, color, text, y) => {
+      ctx.setLineDash([5, 5]); ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(X(d), y + 10); ctx.lineTo(X(d), laneY + 4); ctx.stroke(); ctx.setLineDash([]);
+      pill(text, X(d), y, 'center', color === '#FFFFFF' ? 'rgba(8,14,22,.7)' : 'rgba(150,100,0,.92)');
+    };
+    if (BR.phase !== 'done') markLine(pred, '#FFFFFF', `predicted stop ${fmt(pred)} m`, 18);
+    if (S.ghost && BR.last) markLine(BR.last.d, '#FFD166', `last: ${fmt(BR.last.d)} m at ${fmt(BR.last.v)} m/s`, 44);
+    // thinking / braking brackets
+    const by = roadTop - 22;
+    const bracket = (a, b, col, text) => {
+      if (b - a < 0.05) return;
+      ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(X(a), by - 6); ctx.lineTo(X(a), by); ctx.lineTo(X(b), by); ctx.lineTo(X(b), by - 6); ctx.stroke();
+      pill(text, X((a + b) / 2), by - 18, 'center', col);
+    };
+    const thinkEnd = BR.brakeX !== null ? BR.brakeX : (BR.phase === 'thinking' ? BR.x : 0);
+    bracket(0, thinkEnd, 'rgba(30,79,203,.95)', `thinking ${fmt(thinkEnd)} m`);
+    if (BR.brakeX !== null) bracket(BR.brakeX, BR.x, 'rgba(210,57,46,.95)', `braking ${fmt(BR.x - BR.brakeX)} m`);
+    particles(dt, X, laneY, s);
+    const e = energies(), E0 = e.E0 || 1;
+    const L = Math.max(CAR * s, 38), front = X(BR.x);
+    const car = drawCar(front, laneY, L, BR.wheel, BR.phase === 'braking', e.ke / E0, fmt(S.m, 0) + ' kg', BR.phase === 'ready' ? 0 : BR.v);
+    if (S.arrow && BR.v > 0.2) {
+      const len = clamp(BR.v * 3, 12, 130), y = car.top - 14;
+      arrow(car.mid - len / 2, y, car.mid + len / 2, y, '#FFB02E', 4);
+    }
+    if (BR.phase === 'thinking') pill(`reacting… ${fmt(Math.max(0, S.tr - BR.t), 1)} s`, car.mid, car.top - 36, 'center', 'rgba(30,79,203,.95)');
+    else if (BR.phase === 'braking') pill(`braking · ${fmt(BR.v)} m/s`, car.mid, car.top - 36, 'center', 'rgba(210,57,46,.95)');
+    else if (BR.phase === 'ready') pill(`KE = ${fmtE(e.ke)}`, car.mid, car.top - 36, 'center', 'rgba(173,94,0,.95)');
+    // weather
+    if (S.surface === 'wet') {
+      ctx.strokeStyle = 'rgba(220,230,240,.45)'; ctx.lineWidth = 1.2;
+      drops.forEach(d => { const x = d[0] * W, y = ((d[1] * H + tVis * 420 * d[2]) % H); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 3, y + 12); ctx.stroke(); });
+    } else if (S.surface === 'ice') {
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      drops.forEach(d => { const x = (d[0] * W + Math.sin(tVis + d[1] * 9) * 12), y = ((d[1] * H + tVis * 40 * d[2]) % H); ctx.beginPath(); ctx.arc(x, y, 1.6 * d[2], 0, 7); ctx.fill(); });
+    }
+  }
+
+  /* ----- graph ----- */
+  function drawGraph() {
+    const c = gctx; c.setTransform(DPR, 0, 0, DPR, 0, 0); c.clearRect(0, 0, GW, GH);
+    const pl = 50, pr = 10, pt = 8, pb = 24, w = GW - pl - pr, h = GH - pt - pb;
+    if (w < 20 || h < 20) return;
+    const s = st(), sm = s.samples, E0 = s.E0;
+    c.font = '11px "JetBrains Mono", ui-monospace, monospace'; c.textBaseline = 'middle';
+    if (!sm.length || !E0) {
+      c.strokeStyle = C.line; c.lineWidth = 1; c.beginPath(); c.moveTo(pl, pt); c.lineTo(pl, pt + h); c.lineTo(pl + w, pt + h); c.stroke();
+      c.fillStyle = C.muted; c.textAlign = 'center'; c.fillText(`Press ${S.mode === 'crash' ? 'Crash' : 'Go'} to record a graph`, pl + w / 2, pt + h / 2); c.textAlign = 'left'; return;
+    }
+    const tEnd = sm[sm.length - 1].t, span = Math.max(2, Math.min(12, Math.ceil(tEnd + 0.3))), t0 = Math.max(0, tEnd - span);
+    const X = t => pl + (t - t0) / span * w, Y = v => pt + h - v / E0 * h;
+    c.strokeStyle = C.line; c.lineWidth = 1; c.fillStyle = C.muted;
+    for (let i = 0; i <= 4; i++) { const v = E0 * i / 4, y = Y(v); c.beginPath(); c.moveTo(pl, y); c.lineTo(pl + w, y); c.stroke(); c.textAlign = 'right'; c.fillText(i === 0 ? '0' : fmtE(v), pl - 6, y); }
+    const tStep = span <= 3 ? 0.5 : span <= 6 ? 1 : 2;
+    c.textAlign = 'center';
+    for (let t = Math.ceil(t0 / tStep) * tStep; t <= t0 + span + 1e-6; t += tStep) c.fillText(fmt(t, tStep < 1 ? 1 : 0) + 's', X(t), pt + h + 13);
+    c.textAlign = 'left';
+    [['ke', C.ke], ['heat', C.heat]].forEach(([k, col]) => {
+      c.strokeStyle = col; c.lineWidth = 2.4; c.lineJoin = 'round'; c.beginPath();
+      let started = false;
+      sm.forEach(p => { if (p.t < t0) return; const x = X(p.t), y = Y(p[k]); if (!started) { c.moveTo(x, y); started = true; } else c.lineTo(x, y); });
+      c.stroke();
+      const lp = sm[sm.length - 1]; c.fillStyle = col; c.beginPath(); c.arc(X(lp.t), Y(lp[k]), 3.5, 0, 7); c.fill();
+    });
+  }
+
+  /* ----- UI ----- */
+  const BAR_DEF = {
+    crash: [['ke', 'Motion', 'kinetic (KE)', 'var(--ke)'], ['heat', 'Squash & heat', 'barrels, sound', 'var(--heat)']],
+    brake: [['ke', 'Motion', 'kinetic (KE)', 'var(--ke)'], ['heat', 'Heat', 'brakes and tyres', 'var(--heat)']]
+  };
+  let barEls = [];
+  function buildBars() {
+    const defs = BAR_DEF[S.mode];
+    $('#ke-bars').innerHTML = defs.map(([k, l, s, col]) => `<div class="bar-row"><div class="bl">${l}<small>${s}</small></div><div class="track"><div class="fill" style="background:${col}"></div></div><div class="bv">0 J</div></div>`).join('');
+    barEls = $$('#ke-bars .bar-row').map((row, i) => ({ k: defs[i][0], fill: $('.fill', row), val: $('.bv', row) }));
+    $('#ke-legend').innerHTML = defs.map(([k, l, s, col]) => `<span><i style="background:${col}"></i>${l}</span>`).join('');
+  }
+  const ro = $$('#ke-readouts .ro').map(el => ({ l: $('.ro-l', el), v: $('.ro-v', el) }));
+  const setRO = (i, label, val, unit) => { if (ro[i].l.textContent !== label) ro[i].l.textContent = label; ro[i].v.innerHTML = `${val}<small>${unit}</small>`; };
+  function updateUI() {
+    const e = energies(), E0 = e.E0 || 1, s = st();
+    barEls.forEach(b => { const v = e[b.k] || 0; b.fill.style.width = clamp(v / E0 * 100, 0, 100) + '%'; b.val.textContent = fmtE(v); });
+    $('#ke-total').textContent = fmtE(e.E0) + (s.phase === 'ready' ? '' : '  (stays the same)');
+    const v = s.phase === 'ready' ? S.v : s.v;
+    setRO(0, 'Speed', fmt(v), 'm/s');
+    setRO(1, 'Kinetic energy', ...splitE(e.ke));
+    if (S.mode === 'crash') { setRO(2, 'Squash depth', fmt(CR.crush, 2), 'm'); setRO(3, 'Time', fmt(CR.t, 2), 's'); }
+    else { setRO(2, 'Distance travelled', fmt(BR.x), 'm'); setRO(3, 'Time', fmt(BR.t, 1), 's'); }
+    const want = S.mode === 'crash' ? (s.phase === 'ready' ? 'Crash' : 'Crash again') : (s.phase === 'ready' ? 'Go' : 'Go again');
+    const lab = $('#ke-act-label'); if (lab.textContent !== want) lab.textContent = want;
+    if (s.phase !== 'ready') $('#ke-hint').hidden = true;
+  }
+  function speedWords(v) { return v < 4 ? 'walking or jogging pace' : v < 9 ? 'about bike speed' : v < 15 ? 'town driving' : v < 25 ? 'a fast main road' : 'motorway speed'; }
+  function updateEq() {
+    const ke = 0.5 * S.m * S.v * S.v;
+    $('#ke-v-help').textContent = `= ${fmt(S.v * 3.6, 0)} km/h, ${speedWords(S.v)}`;
+    let html = `<div class="line">KE = ½ × m × v² = ½ × ${fmt(S.m, 0)} kg × (${fmt(S.v)} m/s)² = <b class="ke">${fmtE(ke)}</b></div>`;
+    if (S.mode === 'crash') {
+      const F = S.F * 1000, d = ke / F;
+      html += `<div class="line">Squash depth = KE ÷ F = ${fmt(ke, 0)} J ÷ ${fmt(F, 0)} N = <b class="heat">${fmt(d, 2)} m</b>${d > DEPTH ? ' (more than the 2.5 m of barrels!)' : ''}</div>
+        <p class="note">At 2× the speed this car would carry ${fmtE(ke * 4)}, which is <b>4 times</b> as much. At 2× the mass it would carry ${fmtE(ke * 2)}, only 2 times as much. ${d > DEPTH ? 'The barrels can only absorb ' + fmtE(F * DEPTH) + ', so this car will smash through.' : ''}</p>`;
+    } else {
+      const th = thinkD(), br = brakeD(), tot = th + br, m = mu();
+      html += `<div class="line">Thinking distance = v × reaction time = ${fmt(S.v)} × ${fmt(S.tr)} = <b class="acc">${fmt(th)} m</b></div>
+        <div class="line">Braking distance = v² ÷ (2 × μ × g) = ${fmt(S.v)}² ÷ (2 × ${fmt(m)} × 9.81) = <b class="heat">${fmt(br)} m</b></div>
+        <p class="note">Total stopping distance ${fmt(tot)} m: ${tot < CROSS ? `the car should stop ${fmt(CROSS - tot)} m before the crossing.` : `the car will <b>not</b> stop before the crossing at 30 m.`} The brakes must turn all ${fmtE(ke)} into heat. Double the speed and the braking distance becomes 4 times longer.</p>`;
+      $('#ke-mu-out').textContent = `grip μ = ${fmt(m)}`;
+    }
+    $('#ke-eq').innerHTML = html;
+  }
+
+  /* ----- loop ----- */
+  function drawAll(dt = 0) {
+    if (!W || !H) return;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.save();
+    if (S.shake > 0.1) ctx.translate((rnd() - 0.5) * S.shake * 2, (rnd() - 0.5) * S.shake * 2);
+    if (S.mode === 'crash') drawCrash(dt); else drawBrake(dt);
+    ctx.restore();
+    drawGraph(); updateUI();
+  }
+  function frame(ts) {
+    raf = requestAnimationFrame(frame);
+    let dt = last ? (ts - last) / 1000 : 0; last = ts; dt = clamp(dt, 0, 0.05);
+    tVis += dt; acc += dt * S.speed;
+    let n = 0;
+    while (acc >= STEP && n < 150) { if (S.mode === 'crash') stepCrash(STEP); else stepBrake(STEP); acc -= STEP; n++; }
+    if (n >= 150) acc = 0;
+    S.shake *= Math.pow(0.002, dt);
+    drawAll(dt * Math.max(S.speed, 0.3));
+  }
+  function start() { if (running) return; running = true; last = 0; fit(); readColors(); drawAll(); raf = requestAnimationFrame(frame); }
+  function stop() { running = false; cancelAnimationFrame(raf); screechOff(); }
+
+  /* ----- controls ----- */
+  function resetMode() {
+    if (S.mode === 'crash') crashReset(); else brakeReset();
+    status(S.mode === 'crash' ? 'Ready. The car is waiting at the start line.' : 'Ready. The traffic light is green. Press Go and it turns red.');
+    updateEq();
+  }
+  function act() { getAudio(); if (S.mode === 'crash') crashStart(); else brakeStart(); }
+  $('#ke-act').addEventListener('click', act);
+  $('#ke-reset').addEventListener('click', resetMode);
+  const rV = bindControl('ke-v', 'm/s', 1, v => { S.v = v; resetMode(); }, status);
+  bindControl('ke-m', 'kg', 0, v => { S.m = v; resetMode(); }, status);
+  bindControl('ke-f', 'kN', 0, v => { S.F = v; resetMode(); }, status);
+  bindControl('ke-tr', 's', 1, v => { S.tr = v; resetMode(); }, status);
+  $$('input[name="ke-surf"]').forEach(r => r.addEventListener('change', () => { S.surface = r.value; resetMode(); }));
+  $$('input[name="ke-speed"]').forEach(r => r.addEventListener('change', () => { S.speed = parseFloat(r.value); }));
+  $('#ke-arrow').addEventListener('change', e => { S.arrow = e.target.checked; });
+  $('#ke-ghost').addEventListener('change', e => { S.ghost = e.target.checked; });
+  $('#ke-sound').addEventListener('change', e => { S.sound = e.target.checked; if (!S.sound) screechOff(); });
+
+  function setMode(m) {
+    screechOff(); S.mode = m;
+    $$('.tabs [role=tab]', root).forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === m)));
+    $('#ke-ctl-crash').hidden = m !== 'crash'; $('#ke-ctl-brake').hidden = m !== 'brake';
+    $('#ke-lab-sub').textContent = m === 'crash'
+      ? 'Choose the car\'s mass and speed, then crash it into a row of water barrels. The faster it goes, the deeper the barrels squash.'
+      : 'A traffic light turns red. The driver reacts, then brakes. See how speed, road surface and reaction time change the stopping distance.';
+    $('#ke-hint').textContent = m === 'crash' ? 'Set the speed and mass, then press Crash' : 'Pick a road surface, then press Go';
+    $('#ke-hint').hidden = false;
+    cv.setAttribute('aria-label', m === 'crash' ? 'Simulation of a car crashing into crash barrels. Press Space to start, arrow keys to change speed.' : 'Simulation of a car braking for a red light. Press Space to start, arrow keys to change speed.');
+    S.particles = []; buildBars(); resetMode();
+  }
+  $$('.tabs [role=tab]', root).forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  cv.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); act(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); S.v = clamp(S.v + (e.key === 'ArrowUp' ? 0.5 : -0.5), 1, 40); rV.sync(S.v); resetMode(); }
+  });
+
+  buildQuiz($('#ke-quiz'), $('#ke-quiz-score'), 'ke', [
+    { q: 'A 1000 kg car moves at 10 m/s. How much kinetic energy does it have?', o: ['5,000 J', '10,000 J', '50,000 J', '100,000 J'], a: 2, hint: 'work out v² first: 10 × 10. Then multiply by ½ and by m.', why: 'KE = ½ × 1000 × 10² = ½ × 1000 × 100 = 50,000 J.' },
+    { q: 'The same car speeds up from 10 m/s to 20 m/s. Its kinetic energy becomes…', o: ['the same', '2 times bigger', '4 times bigger', '20 times bigger'], a: 2, hint: 'speed is squared in the formula.', why: 'Speed is squared, so 2× the speed gives 2 × 2 = 4× the energy. In the crash test, the barrels squash 4 times deeper.' },
+    { q: 'A van has twice the mass of a car. Both drive at 15 m/s. The van\'s kinetic energy is…', o: ['half the car\'s', 'the same', '2 times the car\'s', '4 times the car\'s'], a: 2, hint: 'mass is not squared.', why: 'Mass is not squared, so 2× the mass gives exactly 2× the energy.' },
+    { q: 'If a car goes 3 times faster, roughly how much longer is its braking distance?', o: ['3 times', '6 times', '9 times', 'the same'], a: 2, hint: 'braking distance depends on v², just like KE.', why: 'Braking distance = v² ÷ (2μg). 3× the speed means 3 × 3 = 9× the distance, because the brakes must remove 9× the energy.' },
+    { q: 'When a car brakes to a stop, where does its kinetic energy go?', o: ['It disappears', 'It turns into heat in the brakes and tyres', 'It turns into mass', 'It is stored in the fuel tank'], a: 1, hint: 'touch a bike\'s brake disc after a long downhill. What do you feel?', why: 'Energy can\'t disappear. Friction in the brakes and tyres turns it into heat, with a little sound.' }
+  ]);
+
+  buildBars(); crashReset(); brakeReset(); updateEq();
   return { start, stop };
 }
 })();
