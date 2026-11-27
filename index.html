@@ -345,6 +345,11 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;margin:0;cur
   .topbar nav a + a{display:none}
 }
 </style>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
@@ -999,12 +1004,20 @@ const ART = {
 /* ---------- shared audio context ---------- */
 let sharedAC = null;
 function getAudio() {
+  if (document.hidden) return null;            // never make sound from a hidden or background tab
   try {
     sharedAC = sharedAC || new (window.AudioContext || window.webkitAudioContext)();
     if (sharedAC.state === 'suspended') sharedAC.resume().catch(() => {});
     return sharedAC;
   } catch (e) { return null; }
 }
+/* Silence everything the moment the page is hidden, and release audio when the page closes. */
+document.addEventListener('visibilitychange', () => {
+  if (!sharedAC) return;
+  if (document.hidden) sharedAC.suspend().catch(() => {});
+  else if (sharedAC.state === 'suspended') sharedAC.resume().catch(() => {});
+});
+window.addEventListener('pagehide', () => { if (sharedAC) { sharedAC.close().catch(() => {}); sharedAC = null; } });
 
 /* ---------- animated science background + hero atom ---------- */
 const Ambient = (() => {
@@ -1225,7 +1238,7 @@ const Music = (() => {
 
   function ensure() {
     ac = getAudio(); if (!ac) return false;
-    if (master) return true;
+    if (master && master.context === ac) return true;   // rebuild if the page reopened with a new audio context
     master = ac.createGain(); master.gain.value = 0;
     bus = ac.createBiquadFilter(); bus.type = 'lowpass'; bus.frequency.value = 1300; bus.Q.value = 0.3;
     const delay = ac.createDelay(2), fb = ac.createGain(), dl = ac.createBiquadFilter(), wet = ac.createGain();
